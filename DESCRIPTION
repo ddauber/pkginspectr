@@ -1,6 +1,6 @@
 Package: pkginspectr
 Title: Tidy Tools for Inspecting and Comparing R Package Structure
-Version: 0.0.1
+Version: 0.1.0
 Authors@R:
     person("Daniel", "Dauber", , "daniel.dauber.io@gmail.com", role = c("aut", "cre"))
 Author: Daniel Dauber [aut, cre]
