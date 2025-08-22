@@ -26,3 +26,4 @@ Suggests:
     usethis,
     withr
 Config/testthat/edition: 3
+URL: https://ddauber.github.io/pkginspectr/

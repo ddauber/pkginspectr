@@ -8,3 +8,4 @@ manual_testing/
 .httr-oauth
 .DS_Store
 .quarto
+docs
