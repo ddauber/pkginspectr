@@ -1,0 +1,10 @@
+^pkginspectr\.Rproj$
+^\.Rproj\.user$
+^LICENSE\.md$
+^README\.Rmd$
+
+.*[.]html$
+
+^manual_testing$
+^codecov\.yml$
+^\.github$

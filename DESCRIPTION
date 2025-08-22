@@ -1,0 +1,28 @@
+Package: pkginspectr
+Title: Tidy Tools for Inspecting and Comparing R Package Structure
+Version: 0.0.1
+Authors@R:
+    person("Daniel", "Dauber", , "daniel.dauber.io@gmail.com", role = c("aut", "cre"))
+Author: Daniel Dauber [aut, cre]
+Maintainer: Daniel Dauber <daniel.dauber.io@gmail.com>
+Description: Inspect the structure and source code of R packages with a tidy, minimal interface. Provides tools to summarise file counts, folder structure, and lines of code across R packages, whether local or hosted on GitHub. Designed for speed, extensibility, and compatibility with tidy workflows. Visualise results using built-in ggplot2 support, and compare multiple packages side by side to spot patterns or explore code scale.
+License: MIT + file LICENSE
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.3.2
+Imports:
+    cli,
+    desc,
+    dplyr,
+    fs,
+    purrr,
+    stringr,
+    httr,
+    rappdirs,
+    tidyr
+Suggests:
+    glue,
+    testthat (>= 3.0.0),
+    usethis,
+    withr
+Config/testthat/edition: 3

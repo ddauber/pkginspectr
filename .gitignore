@@ -1,0 +1,10 @@
+.Rproj.user
+*.html
+
+
+manual_testing/
+.Rhistory
+.Rdata
+.httr-oauth
+.DS_Store
+.quarto

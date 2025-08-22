@@ -1,0 +1,81 @@
+---
+output: github_document
+---
+
+# pkginspectr
+
+<!-- badges: start -->
+
+[![Lifecycle: experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
+
+<!-- badges: end -->
+
+`pkginspectr` lets you peek inside R packages. It inspects local folders as well as packages downloaded from GitHub or CRAN and returns tidy tibbles that are easy to work with.
+
+Key functions include:
+
+-   `inspect_package()` – summarises file structure, function files, tests and docs.
+-   `get_code_stats()` – counts lines of code, comments and tests.
+-   `plot_pkginspect()` – draws simple but customisable bar charts of the results in the console.
+
+## Installation
+
+You can install the development version from GitHub:
+
+``` r
+# install.packages("remotes")
+remotes::install_github("ddauber/pkginspectr")
+```
+
+## Inspect a package
+
+Want a quick overview of what’s inside an R package?
+`pkginspectr` lets you count files, functions, and other components in seconds.
+
+```{r inspect-package}
+library(pkginspectr)
+
+inspect_package("ddauber/pkginspectr")
+```
+
+## Compute code statistics
+
+Go beyond file counts and see how much code is really there.
+`get_code_stats()` analyses line counts across the package.
+
+```{r get-code-stats}
+get_code_stats("ddauber/pkginspectr")
+```
+
+## Visualise in the console
+
+No need for heavy graphics — `plot_pkg()` renders Unicode bar charts right in your terminal.
+
+```{r plot-pkginspect}
+inspect_package("ddauber/pkginspectr") |>
+  plot_pkg()
+```
+
+You can customise the look to meet your needs: bars are just glyphs and ANSI colours, so you can tweak:
+- colours (e.g. `text_col`, `bar_col`, etc.),
+- bar shape (`glyph`, `start`, `end`),
+- scale/fit (`max_bars`), or
+- add a custom title (`title`)
+
+## Inspect multiple packages at once
+
+Compare packages side by side — perfect for exploring codebases or teaching.
+
+```{r inspect-multiple}
+inspect_package(c(
+  "ddauber/pkginspectr",
+  "ddauber/tidycomp",
+  "ddauber/r4np"
+)) |>
+  plot_pkg(type = "metric")
+```
+
+Here `type = "metric"` switches from a per‑package breakdown to a metric‑centric view
+(e.g., compare `num_r_files`, `num_test_files`, `docs`, etc. across packages).
+
+This package is meant to be a small and fun package with some useful functionality. Enjoy exploring your own R packages (as much as others’ packages)!
