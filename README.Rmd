@@ -7,7 +7,7 @@ output: github_document
 <!-- badges: start -->
 
 [![Lifecycle: experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
-
+[![Codecov test coverage](https://codecov.io/gh/ddauber/pkginspectr/graph/badge.svg)](https://app.codecov.io/gh/ddauber/pkginspectr)
 <!-- badges: end -->
 
 `pkginspectr` lets you peek inside R packages. It inspects local folders as well as packages downloaded from GitHub or CRAN and returns tidy tibbles that are easy to work with.
