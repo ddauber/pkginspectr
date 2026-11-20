@@ -4,23 +4,45 @@
 \alias{inspect_package}
 \title{Inspect packages for structure and file types}
 \usage{
-inspect_package(path = ".")
+inspect_package(path = ".", include_ignored = FALSE)
 }
 \arguments{
-\item{path}{A character vector or list of local package paths.}
+\item{path}{A character vector of local package paths, GitHub repositories
+(\code{"owner/repo"}) or CRAN package names.}
+
+\item{include_ignored}{If \code{TRUE}, also analyse files matched by the
+package's \code{.Rbuildignore}. Version-control folders and R's built-in
+build exclusions are always skipped.}
 }
 \value{
-A \code{pkginspectr_tbl} with one row per package containing structural
-summaries.
+A \code{pkginspectr_tbl} with one row per package and columns:
+\itemize{
+\item \code{package}, \code{version}
+\item \code{num_files}, \code{num_dirs}: files and directories in the package.
+\item \code{num_r_files}: R source files (\code{.R} or \code{.r}) anywhere in the package.
+\item \code{num_function_r_files}, \code{num_non_function_r_files}: R files that do /
+do not define at least one function (detected by the R parser).
+\item \code{num_test_files}: R files under \verb{tests/}.
+\item \code{num_vignettes}: \code{.Rmd}, \code{.qmd} or \code{.Rnw} files under \verb{vignettes/}.
+\item \code{num_docs}: \code{.Rd} files under \verb{man/}.
+\item \code{num_data_files}: data files under \verb{data/} (\code{.rda}, \code{.RData}, \code{.rds},
+\code{.csv}, \code{.tsv}, \code{.tab}, \code{.txt}, optionally compressed).
+}
 }
 \description{
-Examine the file structure of one or more local packages and return summary
-statistics including file counts, whether files contain functions and the
+Examine the file structure of one or more packages and return summary
+statistics including file counts, whether R files define functions and the
 package version.
+}
+\details{
+Only files that \verb{R CMD build} would ship are counted: version-control
+folders (e.g. \verb{.git/}), R's built-in build exclusions (e.g. \verb{.Rproj.user/},
+\code{.Rhistory}) and, unless \code{include_ignored = TRUE}, anything listed in
+\code{.Rbuildignore} (e.g. \verb{docs/}, \verb{data-raw/}). This makes results for a local
+folder comparable with results for a CRAN tarball.
 }
 \examples{
 \dontrun{
-# Inspect the installed "stats" package
-inspect_package(system.file(package = "stats"))
+inspect_package("r-lib/cli")
 }
 }

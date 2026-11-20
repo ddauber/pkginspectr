@@ -1,21 +1,48 @@
 #' Compute code-level statistics for packages
 #'
-#' Analyse all `.R` files in one or more packages and report line counts by
-#' type: total, blank, comments, roxygen comments, function bodies and lines in
-#' test files. The package name and version are also returned.
+#' Analyse the R source files (`.R` and `.r`) in `R/`, `tests/` and `data-raw/`
+#' of one or more packages and report line counts by type: total, blank,
+#' comments, roxygen comments, function definitions and lines in test files.
+#' The package name and version are also returned.
 #'
-#' @param path A character vector or list of local package paths.
+#' Lines are classified with R's own parser ([utils::getParseData()]), so
+#' strings that contain `#` or unbalanced braces are counted correctly, and
+#' functions are detected regardless of how they are written (`<-`, `=`,
+#' `\(x)` lambdas, or anonymous functions inside calls). Files that fail to
+#' parse fall back to a line-based heuristic and their function lines are not
+#' counted; a warning names each such file.
 #'
-#' @return A `pkginspectr_tbl` with one row per package containing summary line
-#'   counts.
+#' Only files that `R CMD build` would ship are analysed, so results for a
+#' local folder are comparable with results for a CRAN tarball. In particular,
+#' anything listed in `.Rbuildignore` (often `data-raw/`) is skipped unless
+#' `include_ignored = TRUE`.
+#'
+#' @param path A character vector of local package paths, GitHub repositories
+#'   (`"owner/repo"`) or CRAN package names.
+#' @param include_ignored If `TRUE`, also analyse files matched by the
+#'   package's `.Rbuildignore`. Version-control folders and R's built-in
+#'   build exclusions are always skipped.
+#'
+#' @return A `pkginspectr_tbl` with one row per package and columns:
+#'   * `package`, `version`
+#'   * `total_lines`: all lines in the analysed files.
+#'   * `blank_lines`: empty or whitespace-only lines (outside strings).
+#'   * `comment_lines`: lines containing only a non-roxygen comment.
+#'   * `roxygen_lines`: lines containing only a roxygen (`#'`) comment.
+#'   * `function_lines`: lines inside function definitions, including their
+#'     header line and any comments or blank lines within them. Nested
+#'     functions are counted once.
+#'   * `test_lines`: total lines of files under `tests/`.
+#'
+#'   `blank_lines`, `comment_lines` and `roxygen_lines` do not overlap;
+#'   `function_lines` and `test_lines` overlap with them.
 #' @export
 #'
 #' @examples
 #' \dontrun{
-#' # Analyse the installed "stats" package
-#' get_code_stats(system.file(package = "stats"))
+#' get_code_stats("r-lib/cli")
 #' }
-get_code_stats <- function(path = ".") {
+get_code_stats <- function(path = ".", include_ignored = FALSE) {
   paths <- resolve_package_path(path)
 
   result <- purrr::map_dfr(paths, function(pkg_path) {
@@ -29,16 +56,8 @@ get_code_stats <- function(path = ".") {
 
     cli::cli_inform("Analysing code for {.pkg {pkg_name}}...")
 
-    r_dirs <- c("R", "tests", "data-raw") |>
-      purrr::map(~ fs::path(pkg_path, .x)) |>
-      purrr::keep(fs::dir_exists)
-
-    r_files <- purrr::map(
-      r_dirs,
-      ~ fs::dir_ls(.x, regexp = "\\.R$", recurse = TRUE)
-    ) |>
-      unlist(use.names = FALSE) |>
-      unique()
+    files <- list_pkg_files(pkg_path, include_ignored)$files
+    r_files <- files[is_r_file(files) & grepl("^(R|tests|data-raw)/", files)]
 
     if (length(r_files) == 0) {
       cli::cli_warn("No .R files found in {.pkg {pkg_name}}.")
@@ -54,25 +73,15 @@ get_code_stats <- function(path = ".") {
       ))
     }
 
-    stats <- purrr::map(r_files, function(file) {
-      lines <- readLines(file, warn = FALSE)
-      total <- length(lines)
-      blank <- sum(stringr::str_detect(lines, "^\\s*$"))
-      roxygen <- sum(stringr::str_detect(lines, "^\\s*#'"))
-      comment <- sum(
-        stringr::str_detect(lines, "^\\s*#") &
-          !stringr::str_detect(lines, "^\\s*#'")
-      )
-      func_lines <- estimate_function_lines(lines)
-      is_test <- stringr::str_detect(file, "/tests/")
-
+    stats <- purrr::map(r_files, function(rel) {
+      counts <- analyse_r_file(fs::path(pkg_path, rel), label = rel)
       dplyr::tibble(
-        total_lines = total,
-        blank_lines = blank,
-        comment_lines = comment,
-        roxygen_lines = roxygen,
-        function_lines = func_lines,
-        test_lines = ifelse(is_test, total, 0)
+        total_lines = counts$total,
+        blank_lines = counts$blank,
+        comment_lines = counts$comment,
+        roxygen_lines = counts$roxygen,
+        function_lines = counts$function_lines,
+        test_lines = if (startsWith(rel, "tests/")) counts$total else 0L
       )
     })
 
@@ -87,45 +96,100 @@ get_code_stats <- function(path = ".") {
   result
 }
 
-#' Estimate function block line count from a character vector
+#' Read and classify the lines of one R file
 #'
-#' Rough approximation of the number of lines across all function bodies.
-#'
-#' @param lines A character vector of code lines
-#' @return Integer, total estimated function body lines
+#' @param file Path to the file.
+#' @param label Name used in warnings (usually the package-relative path).
+#' @return See `count_lines()`.
 #' @keywords internal
 #' @noRd
-estimate_function_lines <- function(lines) {
-  func_start <- stringr::str_which(lines, "<-\\s*function\\s*\\(")
-  if (length(func_start) == 0) {
-    return(0)
+analyse_r_file <- function(file, label = file) {
+  lines <- readLines(file, warn = FALSE, encoding = "UTF-8")
+  count_lines(lines, label = label)
+}
+
+#' Classify lines of R code using the parser
+#'
+#' @param lines Character vector of source lines.
+#' @param label Name used in the warning if parsing fails.
+#' @return A list with integer counts `total`, `blank`, `comment`, `roxygen`,
+#'   `function_lines` and logical `has_function`.
+#' @keywords internal
+#' @noRd
+count_lines <- function(lines, label = "<text>") {
+  n <- length(lines)
+  if (n == 0) {
+    return(list(
+      total = 0L, blank = 0L, comment = 0L, roxygen = 0L,
+      function_lines = 0L, has_function = FALSE
+    ))
   }
 
-  total_lines <- 0
-  open_braces <- 0
-  inside_function <- FALSE
+  is_blank <- grepl("^\\s*$", lines)
+  is_roxygen_text <- grepl("^\\s*#'", lines)
+  pd <- parse_lines(lines, label)
 
-  for (i in seq_along(lines)) {
-    line <- lines[i]
-    if (i %in% func_start) {
-      inside_function <- TRUE
-      open_braces <- open_braces +
-        stringr::str_count(line, "\\{") -
-        stringr::str_count(line, "\\}")
-      total_lines <- total_lines + 1
-      next
-    }
-
-    if (inside_function) {
-      open_braces <- open_braces +
-        stringr::str_count(line, "\\{") -
-        stringr::str_count(line, "\\}")
-      total_lines <- total_lines + 1
-      if (open_braces <= 0) {
-        inside_function <- FALSE
-      }
-    }
+  if (is.null(pd)) {
+    # Parse failure: classify by line prefix; function lines unknown.
+    is_comment_text <- grepl("^\\s*#", lines)
+    return(list(
+      total = n,
+      blank = sum(is_blank),
+      comment = sum(is_comment_text & !is_roxygen_text),
+      roxygen = sum(is_roxygen_text),
+      function_lines = 0L,
+      has_function = any(grepl("\\bfunction\\s*\\(|\\\\\\s*\\(", lines))
+    ))
   }
 
-  total_lines
+  terminals <- pd[pd$terminal, , drop = FALSE]
+  code_tok <- terminals[terminals$token != "COMMENT", , drop = FALSE]
+  comment_tok <- terminals[terminals$token == "COMMENT", , drop = FALSE]
+
+  # A token can span lines (multi-line strings), so expand its range.
+  code_lines <- span_lines(code_tok$line1, code_tok$line2)
+  comment_only <- setdiff(unique(comment_tok$line1), code_lines)
+
+  fun_tok <- terminals[terminals$token %in% c("FUNCTION", "'\\\\'"), ,
+    drop = FALSE
+  ]
+  fun_expr <- pd[pd$id %in% fun_tok$parent, , drop = FALSE]
+  fun_lines <- span_lines(fun_expr$line1, fun_expr$line2)
+
+  list(
+    total = n,
+    blank = sum(is_blank[setdiff(seq_len(n), code_lines)]),
+    comment = sum(!is_roxygen_text[comment_only]),
+    roxygen = sum(is_roxygen_text[comment_only]),
+    function_lines = length(fun_lines),
+    has_function = nrow(fun_tok) > 0
+  )
+}
+
+#' Parse lines and return parse data, or `NULL` with a warning on failure
+#' @noRd
+parse_lines <- function(lines, label) {
+  tryCatch(
+    {
+      exprs <- parse(text = lines, keep.source = TRUE)
+      utils::getParseData(exprs, includeText = FALSE)
+    },
+    error = function(e) {
+      reason <- conditionMessage(e)
+      cli::cli_warn(c(
+        "Could not parse {.file {label}}; its function lines are not counted.",
+        "x" = "{reason}"
+      ))
+      NULL
+    }
+  )
+}
+
+#' Unique line numbers covered by a set of `line1`-`line2` ranges
+#' @noRd
+span_lines <- function(line1, line2) {
+  if (length(line1) == 0) {
+    return(integer())
+  }
+  unique(unlist(Map(seq.int, line1, line2), use.names = FALSE))
 }

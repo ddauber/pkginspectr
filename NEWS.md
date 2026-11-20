@@ -1,3 +1,23 @@
+# pkginspectr 0.1.1
+
+-   `get_code_stats()` now classifies lines with R's parser (`utils::getParseData()`)
+    instead of regular expressions and brace counting. Functions assigned with `=`,
+    `\(x)` lambdas and anonymous functions are now counted; one-line functions no
+    longer absorb the following line; `{`, `}` and `#` inside strings are no longer
+    miscounted. Files that fail to parse produce a warning.
+
+-   `inspect_package()` and `get_code_stats()` classify files by their path relative
+    to the package root. Previously a package stored under a folder named `tests/`,
+    `man/` or `data/` had all of its files misclassified.
+
+-   `inspect_package()` and `get_code_stats()` now count only files that `R CMD build`
+    would ship: `.Rbuildignore`, version-control folders and R's built-in exclusions
+    are respected, so local folders and CRAN tarballs are comparable. Use the new
+    `include_ignored = TRUE` argument to count `.Rbuildignore`d files again.
+
+-   Lower-case `.r` files, `.Rnw` vignettes and `.rds`/`.csv`/`.tsv`/`.tab`/`.txt`
+    data files are now recognised.
+
 # pkginspectr 0.1.0
 
 -   `pkginspectr` returns statistical insights into R packages:

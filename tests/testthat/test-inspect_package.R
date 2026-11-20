@@ -1,21 +1,31 @@
-test_that("inspect_package returns expected structure", {
-  withr::local_tempdir() |>
-    (\(tmp) {
-      pkg_path <- file.path(tmp, "pkg1")
-      usethis::create_package(
-        pkg_path,
-        open = FALSE,
-        fields = list(Title = "Test Package")
-      )
+test_that("inspect_package returns exact counts for the fixture package", {
+  result <- suppressMessages(inspect_package(fixture_path()))
 
-      result <- inspect_package(pkg_path)
+  expect_s3_class(result, "pkginspectr_tbl")
+  expect_equal(result$package, "fixturepkg")
+  expect_equal(result$version, "1.2.3")
+  expect_equal(result$num_files, 9)
+  expect_equal(result$num_dirs, 6)
+  expect_equal(result$num_r_files, 4)
+  expect_equal(result$num_function_r_files, 1)
+  expect_equal(result$num_non_function_r_files, 3)
+  expect_equal(result$num_test_files, 2)
+  expect_equal(result$num_vignettes, 1)
+  expect_equal(result$num_docs, 1)
+  expect_equal(result$num_data_files, 1)
+})
 
-      expect_s3_class(result, "tbl_df")
-      expect_equal(nrow(result), 1)
-      expect_true("package" %in% names(result))
-      expect_true("version" %in% names(result))
-      expect_true("num_r_files" %in% names(result))
-    })()
+test_that("inspect_package ignores build-excluded files", {
+  pkg <- local_fixture_copy()
+  fs::dir_create(fs::path(pkg, c(".git", "docs")))
+  fs::file_create(fs::path(pkg, c(".git/HEAD", "docs/index.html", ".Rhistory")))
+  writeLines("^docs$", fs::path(pkg, ".Rbuildignore"))
+
+  expect_equal(suppressMessages(inspect_package(pkg))$num_files, 9)
+  expect_equal(suppressMessages(inspect_package(pkg))$num_dirs, 6)
+  all <- suppressMessages(inspect_package(pkg, include_ignored = TRUE))
+  expect_equal(all$num_files, 10)
+  expect_equal(all$num_dirs, 7)
 })
 
 test_that("inspect_package errors on bad path", {
@@ -25,18 +35,13 @@ test_that("inspect_package errors on bad path", {
 test_that("inspect_package warns if no DESCRIPTION", {
   path <- withr::local_tempdir()
   fs::dir_create(fs::path(path, "R"))
-  expect_warning(result <- inspect_package(path))
+  expect_warning(result <- suppressMessages(inspect_package(path)))
   expect_true(is.na(result$version))
 })
 
-test_that("inspect_package errors if fs::dir_ls() fails", {
+test_that("inspect_package errors if path is a file", {
   tmp_file <- withr::local_tempfile()
   writeLines("This is not a directory", tmp_file)
-
-  # Confirm it's a file
-  expect_true(fs::file_exists(tmp_file))
-  expect_false(fs::dir_exists(tmp_file))
-
   expect_error(
     inspect_package(tmp_file),
     "does not exist|Failed to list files|Could not resolve path"
@@ -46,48 +51,21 @@ test_that("inspect_package errors if fs::dir_ls() fails", {
 test_that("inspect_package warns on malformed DESCRIPTION file", {
   pkg_path <- withr::local_tempdir()
   fs::dir_create(fs::path(pkg_path, "R"))
-  writeLines("Package: malformed\nVersion", fs::path(pkg_path, "DESCRIPTION")) # incomplete field
-
+  writeLines("Package: malformed\nVersion", fs::path(pkg_path, "DESCRIPTION"))
   expect_warning(
-    result <- inspect_package(pkg_path),
+    result <- suppressMessages(inspect_package(pkg_path)),
     "Failed to read DESCRIPTION"
   )
   expect_true(is.na(result$version))
 })
 
 test_that("inspect_package triggers error on unreadable folder", {
-  skip_if(
-    Sys.info()[["sysname"]] == "Windows",
-    "chmod test unsupported on Windows"
-  )
+  skip_on_os("windows")
   skip_if(Sys.info()[["effective_user"]] == "root", "cannot test as root")
 
   pkg_path <- withr::local_tempdir()
-  fs::dir_create(pkg_path)
   Sys.chmod(pkg_path, mode = "000")
+  withr::defer(Sys.chmod(pkg_path, mode = "700"))
 
-  expect_error(
-    inspect_package(pkg_path),
-    "Failed to list files in"
-  )
-
-  Sys.chmod(pkg_path, mode = "700")
-})
-
-test_that("get_code_stats warns and returns 0s when no .R files found", {
-  pkg_path <- withr::local_tempdir()
-  fs::dir_create(fs::path(pkg_path, "R")) # Create R folder but leave it empty
-  fs::dir_create(fs::path(pkg_path, "tests"))
-  fs::dir_create(fs::path(pkg_path, "data-raw"))
-  expect_warning(
-    result <- get_code_stats(pkg_path),
-    "No .R files found"
-  )
-
-  expect_s3_class(result, "tbl_df")
-  expect_true("version" %in% names(result))
-  expect_true(is.na(result$version))
-  expect_equal(result$total_lines, 0)
-  expect_equal(result$function_lines, 0)
-  expect_equal(result$test_lines, 0)
+  expect_error(inspect_package(pkg_path), "Failed to list files in")
 })

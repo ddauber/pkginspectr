@@ -4,23 +4,54 @@
 \alias{get_code_stats}
 \title{Compute code-level statistics for packages}
 \usage{
-get_code_stats(path = ".")
+get_code_stats(path = ".", include_ignored = FALSE)
 }
 \arguments{
-\item{path}{A character vector or list of local package paths.}
+\item{path}{A character vector of local package paths, GitHub repositories
+(\code{"owner/repo"}) or CRAN package names.}
+
+\item{include_ignored}{If \code{TRUE}, also analyse files matched by the
+package's \code{.Rbuildignore}. Version-control folders and R's built-in
+build exclusions are always skipped.}
 }
 \value{
-A \code{pkginspectr_tbl} with one row per package containing summary line
-counts.
+A \code{pkginspectr_tbl} with one row per package and columns:
+\itemize{
+\item \code{package}, \code{version}
+\item \code{total_lines}: all lines in the analysed files.
+\item \code{blank_lines}: empty or whitespace-only lines (outside strings).
+\item \code{comment_lines}: lines containing only a non-roxygen comment.
+\item \code{roxygen_lines}: lines containing only a roxygen (\verb{#'}) comment.
+\item \code{function_lines}: lines inside function definitions, including their
+header line and any comments or blank lines within them. Nested
+functions are counted once.
+\item \code{test_lines}: total lines of files under \verb{tests/}.
+}
+
+\code{blank_lines}, \code{comment_lines} and \code{roxygen_lines} do not overlap;
+\code{function_lines} and \code{test_lines} overlap with them.
 }
 \description{
-Analyse all \code{.R} files in one or more packages and report line counts by
-type: total, blank, comments, roxygen comments, function bodies and lines in
-test files. The package name and version are also returned.
+Analyse the R source files (\code{.R} and \code{.r}) in \verb{R/}, \verb{tests/} and \verb{data-raw/}
+of one or more packages and report line counts by type: total, blank,
+comments, roxygen comments, function definitions and lines in test files.
+The package name and version are also returned.
+}
+\details{
+Lines are classified with R's own parser (\code{\link[utils:getParseData]{utils::getParseData()}}), so
+strings that contain \verb{#} or unbalanced braces are counted correctly, and
+functions are detected regardless of how they are written (\verb{<-}, \code{=},
+\verb{\\(x)} lambdas, or anonymous functions inside calls). Files that fail to
+parse fall back to a line-based heuristic and their function lines are not
+counted; a warning names each such file.
+
+Only files that \verb{R CMD build} would ship are analysed, so results for a
+local folder are comparable with results for a CRAN tarball. In particular,
+anything listed in \code{.Rbuildignore} (often \verb{data-raw/}) is skipped unless
+\code{include_ignored = TRUE}.
 }
 \examples{
 \dontrun{
-# Analyse the installed "stats" package
-get_code_stats(system.file(package = "stats"))
+get_code_stats("r-lib/cli")
 }
 }

@@ -1,6 +1,6 @@
 Package: pkginspectr
 Title: Tidy Tools for Inspecting and Comparing R Package Structure
-Version: 0.1.0
+Version: 0.1.1
 Authors@R:
     person("Daniel", "Dauber", , "daniel.dauber.io@gmail.com", role = c("aut", "cre"))
 Author: Daniel Dauber [aut, cre]
@@ -9,21 +9,22 @@ Description: Inspect the structure and source code of R packages with a tidy, mi
 License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.3.2
 Imports:
     cli,
     desc,
     dplyr,
     fs,
     purrr,
-    stringr,
     httr,
     rappdirs,
-    tidyr
+    tidyr,
+    utils
 Suggests:
     glue,
+    stringr,
     testthat (>= 3.0.0),
     usethis,
     withr
 Config/testthat/edition: 3
 URL: https://ddauber.github.io/pkginspectr/
+Config/roxygen2/version: 8.1.0
