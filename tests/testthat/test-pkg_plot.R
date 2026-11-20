@@ -91,3 +91,11 @@ test_that("pkg_plot rejects unsuitable input", {
   expect_error(pkg_plot(data.frame(n = 1)), "package")
   expect_error(pkg_plot(data.frame(package = "a")), "no numeric columns")
 })
+
+test_that("values are shown with thousands separators and at most 3 decimals", {
+  x <- dplyr::tibble(package = c("a", "b"), ratio = c(0.5026087, 0.28), n = c(1234567, 2))
+  lines <- plot_lines(x, type = "metric")
+  expect_match(lines, "0.503$", all = FALSE)
+  expect_match(lines, "0.28$", all = FALSE)
+  expect_match(lines, "1,234,567$", all = FALSE)
+})

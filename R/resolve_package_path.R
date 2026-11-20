@@ -14,26 +14,35 @@ resolve_package_path <- function(
   cache = c("session", "persistent", "none")
 ) {
   cache <- match.arg(cache)
+  path <- check_path(path)
+  fs::path_abs(vapply(path, resolve_one, character(1), cache = cache, USE.NAMES = FALSE))
+}
+
+#' Resolve a single package specification to a local directory
+#' @noRd
+resolve_one <- function(p, cache) {
+  spec <- parse_pkg_spec(p)
+  switch(
+    spec$source,
+    local = as.character(fs::path_abs(spec$path)),
+    github = resolve_github(spec, cache),
+    cran = resolve_cran(spec, cache)
+  )
+}
+
+#' Validate `path`: a non-empty character vector without `NA`s
+#' @noRd
+check_path <- function(path, call = rlang::caller_env()) {
   if (is.list(path)) {
     path <- unlist(path)
   }
   if (!is.character(path) || length(path) == 0 || anyNA(path)) {
     cli::cli_abort(
-      "{.arg path} must be a character vector of local folders, GitHub repos or CRAN package names."
+      "{.arg path} must be a character vector of local folders, GitHub repos or CRAN package names.",
+      call = call
     )
   }
-
-  paths <- purrr::map_chr(path, function(p) {
-    spec <- parse_pkg_spec(p)
-    switch(
-      spec$source,
-      local = as.character(fs::path_abs(spec$path)),
-      github = resolve_github(spec, cache),
-      cran = resolve_cran(spec, cache)
-    )
-  })
-
-  fs::path_abs(paths)
+  path
 }
 
 # Parsing ----------------------------------------------------------------------
@@ -270,10 +279,44 @@ cran_repos <- function() {
 #' Versions of a package in CRAN's archive (empty if none)
 #' @noRd
 cran_archive_versions <- function(name, repos) {
+  cran_archive_listing(name, repos)$version
+}
+
+#' Versions and dates in a package's CRAN archive folder
+#'
+#' Parses the folder's index page, where each line holds a tarball link
+#' followed by its timestamp, e.g.
+#' `<a href="desc_1.4.0.tar.gz">desc_1.4.0.tar.gz</a>  2021-09-28 07:30  289K`.
+#'
+#' @return A tibble with `version` (character) and `date` (Date), possibly
+#'   with zero rows.
+#' @noRd
+cran_archive_listing <- function(name, repos) {
   lines <- read_url_lines(paste0(repos, "/src/contrib/Archive/", name, "/"))
-  pattern <- paste0(gsub(".", "\\.", name, fixed = TRUE), "_([0-9][0-9.-]*)\\.tar\\.gz")
-  matches <- unlist(regmatches(lines, gregexpr(pattern, lines)))
-  unique(sub(pattern, "\\1", matches))
+  pattern <- paste0(
+    "href=\"",
+    gsub(".", "\\.", name, fixed = TRUE),
+    "_([0-9][0-9.-]*)\\.tar\\.gz\""
+  )
+  lines <- lines[grepl(pattern, lines)]
+  version <- regmatches(lines, regexpr(pattern, lines))
+  version <- sub(pattern, "\\1", version)
+  date_match <- regexpr("[0-9]{4}-[0-9]{2}-[0-9]{2}", lines)
+  date <- rep(NA_character_, length(lines))
+  date[date_match > 0] <- regmatches(lines, date_match)
+  date <- as.Date(date)
+
+  out <- dplyr::tibble(version = version, date = date)
+  out[!duplicated(out$version), ]
+}
+
+#' Publication date of the current CRAN release (`NA` if unknown)
+#' @noRd
+cran_publication_date <- function(name, repos) {
+  lines <- read_url_lines(paste0(repos, "/web/packages/", name, "/DESCRIPTION"))
+  published <- grep("^Date/Publication:", lines, value = TRUE)
+  date <- regmatches(published, regexpr("[0-9]{4}-[0-9]{2}-[0-9]{2}", published))
+  if (length(date) == 0) as.Date(NA) else as.Date(date[[1]])
 }
 
 # Download and cache -----------------------------------------------------------

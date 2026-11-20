@@ -1,3 +1,32 @@
+# pkginspectr (development version)
+
+-   New `pkg_functions()` returns one row per named function: its file,
+    location, start line, code lines, number of arguments and whether it is
+    exported (via `export()` or `exportPattern()`). Useful for finding the
+    largest functions or measuring how much of a package is internal.
+
+-   New `pkg_versions()` lists every CRAN release of a package with its date,
+    and `pkg_history()` runs `pkg_summary()` on several releases (spread evenly
+    across the history by default, or the versions you name) to show how a
+    package grew over time.
+
+-   When several packages are analysed, one that fails (a typo, a failed
+    download, an unreadable folder) no longer aborts the rest. It is reported in
+    a single warning and kept as a row of `NA`s, so `pkg_history()` still
+    returns every other release. A single package, or all packages, failing
+    is still an error.
+
+-   Results print a header saying what they contain, e.g.
+    `# pkginspectr: Lines of code, 3 packages (1 failed)`, matching the
+    titles used by `pkg_plot()`.
+
+-   New "Derived metrics" section in `vignette("pkginspectr")` with
+    copy-and-paste recipes for ratios such as test-to-code lines, comment
+    density, share of code inside functions and help pages per export.
+
+-   `pkg_plot()` shows non-integer values with at most three decimals, so
+    derived metrics such as ratios stay readable.
+
 # pkginspectr 0.2.0
 
 ## Lifecycle changes

@@ -27,6 +27,8 @@ Key functions include:
 -   `pkg_structure()` – counts files, folders, R scripts, tests, docs and data.
 -   `pkg_lines()` – counts lines of code, comments, roxygen and blank lines, in `R/` and in tests.
 -   `pkg_summary()` – both of the above in one table.
+-   `pkg_functions()` – one row per function, with its size, arguments and whether it is exported.
+-   `pkg_history()` – follows a CRAN package across its releases (see `pkg_versions()`).
 -   `pkg_plot()` (or just `plot()`) – draws simple but customisable bar charts of the results in the console.
 
 Counts are designed to be trustworthy: lines are classified with R's own parser, and only files that `R CMD build` would ship are counted (`.Rbuildignore`, `.git/` and friends are skipped), so a local folder and a CRAN release of the same package give comparable results.

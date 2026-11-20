@@ -10,6 +10,13 @@ reference:
   - pkg_summary
   - pkg_structure
   - pkg_lines
+  - pkg_functions
+- title: Package history
+  desc: >
+    Follow a CRAN package across its releases.
+  contents:
+  - pkg_history
+  - pkg_versions
 - title: Visualise
   contents:
   - pkg_plot

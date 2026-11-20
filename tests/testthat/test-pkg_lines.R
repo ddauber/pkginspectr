@@ -51,7 +51,7 @@ test_that("pkg_lines errors on unresolvable path", {
   expect_error(
     pkg_lines(fake),
     regexp = "Could not resolve path .* no such local folder",
-    class = "purrr_error_indexed"
+    class = "rlang_error"
   )
 })
 

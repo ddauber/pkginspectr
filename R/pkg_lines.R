@@ -30,6 +30,12 @@
 #'   Without a prefix, existing local folders take precedence, then
 #'   `"owner/repo"` is treated as GitHub and a bare name as CRAN. A path that
 #'   does not exist (e.g. `"./mypkg"`) is an error, not a GitHub request.
+#'
+#'   With several packages, one that cannot be analysed (a typo, a failed
+#'   download) does not stop the others: it is reported in a warning and
+#'   returned as a row of `NA`s whose `package` is the specification as
+#'   given ([pkg_functions()] leaves it out instead). A single package that
+#'   fails, or all packages failing, is an error.
 #' @param include_ignored If `TRUE`, also analyse files matched by the
 #'   package's `.Rbuildignore`. Version-control folders and R's built-in
 #'   build exclusions are always skipped.
@@ -190,11 +196,8 @@ count_lines <- function(lines, label = "<text>") {
   }
 
   terminals <- pd[pd$terminal, , drop = FALSE]
-  code_tok <- terminals[terminals$token != "COMMENT", , drop = FALSE]
   comment_tok <- terminals[terminals$token == "COMMENT", , drop = FALSE]
-
-  # A token can span lines (multi-line strings), so expand its range.
-  code_lines <- span_lines(code_tok$line1, code_tok$line2)
+  code_lines <- code_line_numbers(pd)
   comment_only <- setdiff(unique(comment_tok$line1), code_lines)
 
   fun_tok <- terminals[terminals$token %in% c("FUNCTION", "'\\\\'"), ,
@@ -235,6 +238,15 @@ parse_lines <- function(lines, label) {
       NULL
     }
   )
+}
+
+#' Line numbers that contain code (any token other than a comment)
+#'
+#' A token can span lines (multi-line strings), so its whole range counts.
+#' @noRd
+code_line_numbers <- function(pd) {
+  code_tok <- pd[pd$terminal & pd$token != "COMMENT", , drop = FALSE]
+  span_lines(code_tok$line1, code_tok$line2)
 }
 
 #' Unique line numbers covered by a set of `line1`-`line2` ranges

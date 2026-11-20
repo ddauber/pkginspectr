@@ -1,6 +1,6 @@
 Package: pkginspectr
 Title: Tidy Tools for Inspecting and Comparing R Package Structure
-Version: 0.2.0
+Version: 0.2.0.9000
 Authors@R:
     person("Daniel", "Dauber", , "daniel.dauber.io@gmail.com", role = c("aut", "cre"))
 Description: Inspect the structure and source code of R packages from local
@@ -23,6 +23,7 @@ Imports:
     dplyr,
     fs,
     lifecycle,
+    pillar,
     purrr (>= 1.0.0),
     rappdirs,
     rlang,

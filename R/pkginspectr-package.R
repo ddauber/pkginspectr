@@ -3,6 +3,7 @@
 
 ## usethis namespace: start
 #' @importFrom lifecycle deprecated
+#' @importFrom pillar tbl_sum
 #' @importFrom rlang %||%
 ## usethis namespace: end
 

@@ -100,6 +100,136 @@ each package only once, so it is the quickest way to get everything:
 pkg_summary(example)
 ```
 
+## Individual functions: `pkg_functions()`
+
+`pkg_functions()` goes one level deeper and returns one row per named
+function, with its size, number of arguments and whether the package exports
+it:
+
+```{r}
+fns <- pkg_functions(example)
+fns
+```
+
+That makes questions such as "which functions are longest?" or "how much of
+the package is internal?" one-liners:
+
+```{r}
+fns[order(fns$code_lines, decreasing = TRUE), c("name", "code_lines")]
+table(exported = fns$exported)
+```
+
+## Following a package over time
+
+`pkg_versions()` lists every CRAN release of a package with its date, and
+`pkg_history()` runs `pkg_summary()` on several of them. By default it picks
+five releases spread across the package's history, always including the
+first and the latest:
+
+```{r, eval = FALSE}
+pkg_versions("dplyr")
+
+history <- pkg_history("dplyr")
+history |>
+  dplyr::select(package, version, date, num_r_files, code_lines)
+```
+
+Plot it with `type = "metric"` to see each metric grow release by release.
+Rows are labelled with their version:
+
+```{r, eval = FALSE}
+pkg_plot(history, type = "metric")
+```
+
+Use `versions` to pick releases yourself, and `cache = "persistent"` to keep
+them for next time, since old releases never change:
+
+```{r, eval = FALSE}
+pkg_history("dplyr", versions = c("0.8.0", "1.0.0", "1.1.0"), cache = "persistent")
+```
+
+## Derived metrics
+
+pkginspectr returns raw counts on purpose: they are unambiguous and add up.
+Ratios are often more useful, especially when comparing packages of very
+different sizes, and each is a single line of dplyr. Copy the ones you need.
+
+```{r, message = FALSE}
+library(dplyr, warn.conflicts = FALSE)
+
+summary <- pkg_summary(example, quiet = TRUE)
+```
+
+### Package-level ratios
+
+```{r}
+summary |>
+  transmute(
+    package,
+    # Lines in tests/ for every line in R/
+    test_to_code = test_lines / r_lines,
+    # Share of all lines that are comments or roxygen documentation
+    comment_density = (comment_lines + roxygen_lines) / total_lines,
+    # Share of code that sits inside function definitions
+    function_share = function_lines / code_lines,
+    # Average size of a script in R/
+    lines_per_r_file = r_lines / num_r_files
+  )
+```
+
+`r_lines` includes the roxygen comments in `R/`, so `test_to_code` is a
+conservative measure: heavily documented packages score a little lower.
+
+### Function-level summaries
+
+`pkg_functions()` lends itself to per-package summaries of function size and
+API surface:
+
+```{r}
+functions <- pkg_functions(example, quiet = TRUE) |>
+  filter(location == "R") |>
+  group_by(package) |>
+  summarise(
+    n_functions = n(),
+    n_exported = sum(exported, na.rm = TRUE),
+    share_internal = mean(!exported, na.rm = TRUE),
+    median_lines = median(code_lines),
+    longest = max(code_lines),
+    .groups = "drop"
+  )
+functions
+```
+
+### Combining tables
+
+Joining the two gives ratios that need both, such as help pages per exported
+function. `num_docs` counts every `.Rd` file, including package-level and
+internal topics, so treat it as a rough indicator:
+
+```{r}
+summary |>
+  select(package, num_docs) |>
+  left_join(functions, by = "package") |>
+  transmute(package, num_docs, n_exported, docs_per_export = num_docs / n_exported)
+```
+
+### Plotting derived metrics
+
+`pkg_plot()` works on any data frame with a `package` column, so derived
+metrics can be plotted too. Use `type = "metric"`, which scales each metric
+on its own, because ratios on different scales do not belong on one bar
+chart:
+
+```{r, eval = FALSE}
+pkg_summary(c("r-lib/cli", "r-lib/fs", "desc"), quiet = TRUE) |>
+  transmute(
+    package,
+    test_to_code = test_lines / r_lines,
+    comment_density = (comment_lines + roxygen_lines) / total_lines
+  ) |>
+  pkg_plot(type = "metric", title = "Testing and documentation")
+```
+
 ## What gets counted
 
 pkginspectr counts the files that `R CMD build` would put into the package

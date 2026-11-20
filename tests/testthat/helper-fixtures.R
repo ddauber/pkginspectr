@@ -41,14 +41,23 @@ local_tarball <- function(top = "examplepkg-main", subdir = NULL, env = parent.f
 }
 
 # Replace the network: downloads copy `tarball` and are recorded in
-# `$urls`; `cran_db` lists current CRAN versions; `archive` lists the
-# file names in CRAN's archive folder.
+# `$urls`; `cran_db` lists current CRAN versions; `archive` lists the file
+# names in CRAN's archive folder (optionally named by file, with dates as
+# values); `published` is the current release's publication date.
 local_fake_network <- function(
   tarball,
   cran_db = c(desc = "1.4.3"),
   archive = character(),
+  published = "2023-12-10",
   env = parent.frame()
 ) {
+  if (is.null(names(archive))) {
+    files <- archive
+    dates <- sprintf("2020-01-%02d", seq_along(archive))
+  } else {
+    files <- names(archive)
+    dates <- unname(archive)
+  }
   log <- new.env()
   log$urls <- character()
   db <- matrix(
@@ -64,7 +73,10 @@ local_fake_network <- function(
     },
     cran_available = function(repos) db,
     read_url_lines = function(url) {
-      paste0('<a href="', archive, '">', archive, "</a>")
+      if (endsWith(url, "/DESCRIPTION")) {
+        return(paste0("Date/Publication: ", published, " 11:40:08 UTC"))
+      }
+      sprintf('<a href="%s">%s</a>  %s 10:00  10K', files, files, dates)
     },
     .env = env
   )

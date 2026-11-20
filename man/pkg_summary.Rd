@@ -26,7 +26,13 @@ package in a subfolder, use the \verb{github::} prefix:
 
 Without a prefix, existing local folders take precedence, then
 \code{"owner/repo"} is treated as GitHub and a bare name as CRAN. A path that
-does not exist (e.g. \code{"./mypkg"}) is an error, not a GitHub request.}
+does not exist (e.g. \code{"./mypkg"}) is an error, not a GitHub request.
+
+With several packages, one that cannot be analysed (a typo, a failed
+download) does not stop the others: it is reported in a warning and
+returned as a row of \code{NA}s whose \code{package} is the specification as
+given (\code{\link[=pkg_functions]{pkg_functions()}} leaves it out instead). A single package that
+fails, or all packages failing, is an error.}
 
 \item{include_ignored}{If \code{TRUE}, also analyse files matched by the
 package's \code{.Rbuildignore}. Version-control folders and R's built-in

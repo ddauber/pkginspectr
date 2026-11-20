@@ -239,6 +239,15 @@ check_plot_data <- function(x, call = rlang::caller_env()) {
       call = call
     )
   }
+  if (inherits(x, "pkginspectr_functions")) {
+    cli::cli_abort(
+      c(
+        "{.arg x} has one row per function, not one per package.",
+        "i" = "Summarise it first, or use {.fn pkg_lines} for package totals."
+      ),
+      call = call
+    )
+  }
   if (!"package" %in% names(x)) {
     cli::cli_abort("{.arg x} must have a {.field package} column.", call = call)
   }
@@ -320,8 +329,14 @@ package_header <- function(x, i) {
   }
 }
 
+#' Format values for display: thousands separators, at most 3 decimals
+#' @noRd
 fmt_num <- function(x) {
-  out <- format(x, big.mark = ",", scientific = FALSE, trim = TRUE)
+  out <- vapply(
+    x,
+    function(v) format(round(v, 3), big.mark = ",", scientific = FALSE, trim = TRUE),
+    character(1)
+  )
   out[is.na(x)] <- "NA"
   out
 }
