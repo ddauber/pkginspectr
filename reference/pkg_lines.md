@@ -38,6 +38,14 @@ pkg_lines(
   that does not exist (e.g. `"./mypkg"`) is an error, not a GitHub
   request.
 
+  With several packages, one that cannot be analysed (a typo, a failed
+  download) does not stop the others: it is reported in a warning and
+  returned as a row of `NA`s whose `package` is the specification as
+  given
+  ([`pkg_functions()`](https://ddauber.github.io/pkginspectr/reference/pkg_functions.md)
+  leaves it out instead). A single package that fails, or all packages
+  failing, is an error.
+
 - include_ignored:
 
   If `TRUE`, also analyse files matched by the package's
@@ -127,7 +135,8 @@ to visualise the result.
 ``` r
 pkg_lines(pkginspectr_example())
 #> Counting lines in examplepkg...
-#> # A tibble: 1 × 11
+#> # pkginspectr: Lines of code, 1 package
+#> # A tibble:    1 × 11
 #>   package version total_lines code_lines comment_lines roxygen_lines blank_lines
 #>   <chr>   <chr>         <int>      <int>         <int>         <int>       <int>
 #> 1 exampl… 1.2.3            32         21             2             4           5

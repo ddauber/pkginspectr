@@ -51,7 +51,8 @@ empties the cache.
 
 pkg_structure(example)
 #> Inspecting examplepkg...
-#> # A tibble: 1 × 11
+#> # pkginspectr: Package structure, 1 package
+#> # A tibble:    1 × 11
 #>   package    version num_files num_dirs num_r_files num_function_r_files
 #>   <chr>      <chr>       <int>    <int>       <int>                <int>
 #> 1 examplepkg 1.2.3           9        6           2                    1
@@ -70,7 +71,8 @@ files under `tests/`.
 lines <- pkg_lines(example)
 #> Counting lines in examplepkg...
 lines
-#> # A tibble: 1 × 11
+#> # pkginspectr: Lines of code, 1 package
+#> # A tibble:    1 × 11
 #>   package version total_lines code_lines comment_lines roxygen_lines blank_lines
 #>   <chr>   <chr>         <int>      <int>         <int>         <int>       <int>
 #> 1 exampl… 1.2.3            32         21             2             4           5
@@ -113,7 +115,8 @@ package only once, so it is the quickest way to get everything:
 
 pkg_summary(example)
 #> Summarising examplepkg...
-#> # A tibble: 1 × 20
+#> # pkginspectr: Package summary, 1 package
+#> # A tibble:    1 × 20
 #>   package    version num_files num_dirs num_r_files num_function_r_files
 #>   <chr>      <chr>       <int>    <int>       <int>                <int>
 #> 1 examplepkg 1.2.3           9        6           2                    1
@@ -122,6 +125,183 @@ pkg_summary(example)
 #> #   total_lines <int>, code_lines <int>, comment_lines <int>,
 #> #   roxygen_lines <int>, blank_lines <int>, r_lines <int>, test_lines <int>,
 #> #   other_lines <int>, function_lines <int>
+```
+
+## Individual functions: `pkg_functions()`
+
+[`pkg_functions()`](https://ddauber.github.io/pkginspectr/reference/pkg_functions.md)
+goes one level deeper and returns one row per named function, with its
+size, number of arguments and whether the package exports it:
+
+``` r
+
+fns <- pkg_functions(example)
+#> Listing functions in examplepkg...
+fns
+#> # pkginspectr: Functions, 3 functions in 1 package
+#> # A tibble:    3 × 9
+#>   package    version file     location name     line code_lines n_args exported
+#>   <chr>      <chr>   <chr>    <chr>    <chr>   <int>      <int>  <int> <lgl>   
+#> 1 examplepkg 1.2.3   R/funs.R R        add_one     5          3      1 TRUE    
+#> 2 examplepkg 1.2.3   R/funs.R R        square     10          1      1 FALSE   
+#> 3 examplepkg 1.2.3   R/funs.R R        compose    12          3      2 FALSE
+```
+
+That makes questions such as “which functions are longest?” or “how much
+of the package is internal?” one-liners:
+
+``` r
+
+fns[order(fns$code_lines, decreasing = TRUE), c("name", "code_lines")]
+#> Warning: Unknown or uninitialised column: `package`.
+#> # pkginspectr: Functions, 3 functions in 0 packages
+#> # A tibble:    3 × 2
+#>   name    code_lines
+#>   <chr>        <int>
+#> 1 add_one          3
+#> 2 compose          3
+#> 3 square           1
+table(exported = fns$exported)
+#> exported
+#> FALSE  TRUE 
+#>     2     1
+```
+
+## Following a package over time
+
+[`pkg_versions()`](https://ddauber.github.io/pkginspectr/reference/pkg_versions.md)
+lists every CRAN release of a package with its date, and
+[`pkg_history()`](https://ddauber.github.io/pkginspectr/reference/pkg_history.md)
+runs
+[`pkg_summary()`](https://ddauber.github.io/pkginspectr/reference/pkg_summary.md)
+on several of them. By default it picks five releases spread across the
+package’s history, always including the first and the latest:
+
+``` r
+
+pkg_versions("dplyr")
+
+history <- pkg_history("dplyr")
+history |>
+  dplyr::select(package, version, date, num_r_files, code_lines)
+```
+
+Plot it with `type = "metric"` to see each metric grow release by
+release. Rows are labelled with their version:
+
+``` r
+
+pkg_plot(history, type = "metric")
+```
+
+Use `versions` to pick releases yourself, and `cache = "persistent"` to
+keep them for next time, since old releases never change:
+
+``` r
+
+pkg_history("dplyr", versions = c("0.8.0", "1.0.0", "1.1.0"), cache = "persistent")
+```
+
+## Derived metrics
+
+pkginspectr returns raw counts on purpose: they are unambiguous and add
+up. Ratios are often more useful, especially when comparing packages of
+very different sizes, and each is a single line of dplyr. Copy the ones
+you need.
+
+``` r
+
+library(dplyr, warn.conflicts = FALSE)
+
+summary <- pkg_summary(example, quiet = TRUE)
+```
+
+### Package-level ratios
+
+``` r
+
+summary |>
+  transmute(
+    package,
+    # Lines in tests/ for every line in R/
+    test_to_code = test_lines / r_lines,
+    # Share of all lines that are comments or roxygen documentation
+    comment_density = (comment_lines + roxygen_lines) / total_lines,
+    # Share of code that sits inside function definitions
+    function_share = function_lines / code_lines,
+    # Average size of a script in R/
+    lines_per_r_file = r_lines / num_r_files
+  )
+#> # pkginspectr: Package statistics, 1 package
+#> # A tibble:    1 × 5
+#>   package    test_to_code comment_density function_share lines_per_r_file
+#>   <chr>             <dbl>           <dbl>          <dbl>            <dbl>
+#> 1 examplepkg         0.28           0.188          0.333             12.5
+```
+
+`r_lines` includes the roxygen comments in `R/`, so `test_to_code` is a
+conservative measure: heavily documented packages score a little lower.
+
+### Function-level summaries
+
+[`pkg_functions()`](https://ddauber.github.io/pkginspectr/reference/pkg_functions.md)
+lends itself to per-package summaries of function size and API surface:
+
+``` r
+
+functions <- pkg_functions(example, quiet = TRUE) |>
+  filter(location == "R") |>
+  group_by(package) |>
+  summarise(
+    n_functions = n(),
+    n_exported = sum(exported, na.rm = TRUE),
+    share_internal = mean(!exported, na.rm = TRUE),
+    median_lines = median(code_lines),
+    longest = max(code_lines),
+    .groups = "drop"
+  )
+functions
+#> # A tibble: 1 × 6
+#>   package    n_functions n_exported share_internal median_lines longest
+#>   <chr>            <int>      <int>          <dbl>        <int>   <int>
+#> 1 examplepkg           3          1          0.667            3       3
+```
+
+### Combining tables
+
+Joining the two gives ratios that need both, such as help pages per
+exported function. `num_docs` counts every `.Rd` file, including
+package-level and internal topics, so treat it as a rough indicator:
+
+``` r
+
+summary |>
+  select(package, num_docs) |>
+  left_join(functions, by = "package") |>
+  transmute(package, num_docs, n_exported, docs_per_export = num_docs / n_exported)
+#> # pkginspectr: Package structure, 1 package
+#> # A tibble:    1 × 4
+#>   package    num_docs n_exported docs_per_export
+#>   <chr>         <int>      <int>           <dbl>
+#> 1 examplepkg        1          1               1
+```
+
+### Plotting derived metrics
+
+[`pkg_plot()`](https://ddauber.github.io/pkginspectr/reference/pkg_plot.md)
+works on any data frame with a `package` column, so derived metrics can
+be plotted too. Use `type = "metric"`, which scales each metric on its
+own, because ratios on different scales do not belong on one bar chart:
+
+``` r
+
+pkg_summary(c("r-lib/cli", "r-lib/fs", "desc"), quiet = TRUE) |>
+  transmute(
+    package,
+    test_to_code = test_lines / r_lines,
+    comment_density = (comment_lines + roxygen_lines) / total_lines
+  ) |>
+  pkg_plot(type = "metric", title = "Testing and documentation")
 ```
 
 ## What gets counted
@@ -211,7 +391,8 @@ messages off, for example in scripts or reports:
 ``` r
 
 pkg_lines(example, quiet = TRUE)
-#> # A tibble: 1 × 11
+#> # pkginspectr: Lines of code, 1 package
+#> # A tibble:    1 × 11
 #>   package version total_lines code_lines comment_lines roxygen_lines blank_lines
 #>   <chr>   <chr>         <int>      <int>         <int>         <int>       <int>
 #> 1 exampl… 1.2.3            32         21             2             4           5

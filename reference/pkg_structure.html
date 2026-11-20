@@ -9,7 +9,7 @@ folders, R scripts, tests, vignettes, help pages and data files."></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">pkginspectr</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -32,7 +32,7 @@ folders, R scripts, tests, vignettes, help pages and data files."></head><body>
   <main id="main" class="col-md-9"><div class="page-header">
 
       <h1>Count files and folders in packages</h1>
-      <small class="dont-index">Source: <a href="https://github.com/ddauber/pkginspectr/blob/v0.2.0/R/pkg_structure.R" class="external-link"><code>R/pkg_structure.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/ddauber/pkginspectr/blob/main/R/pkg_structure.R" class="external-link"><code>R/pkg_structure.R</code></a></small>
       <div class="d-none name"><code>pkg_structure.Rd</code></div>
     </div>
 
@@ -66,7 +66,12 @@ package in a subfolder, use the <code>github::</code> prefix:
 (<code>"cran::desc@1.4.0"</code>). Archived packages are supported.</p></li>
 </ul><p>Without a prefix, existing local folders take precedence, then
 <code>"owner/repo"</code> is treated as GitHub and a bare name as CRAN. A path that
-does not exist (e.g. <code>"./mypkg"</code>) is an error, not a GitHub request.</p></dd>
+does not exist (e.g. <code>"./mypkg"</code>) is an error, not a GitHub request.</p>
+<p>With several packages, one that cannot be analysed (a typo, a failed
+download) does not stop the others: it is reported in a warning and
+returned as a row of <code>NA</code>s whose <code>package</code> is the specification as
+given (<code><a href="pkg_functions.html">pkg_functions()</a></code> leaves it out instead). A single package that
+fails, or all packages failing, is an error.</p></dd>
 
 
 <dt id="arg-include-ignored">include_ignored<a class="anchor" aria-label="anchor" href="#arg-include-ignored"></a></dt>
@@ -122,7 +127,8 @@ folder comparable with results for a CRAN tarball.</p>
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu">pkg_structure</span><span class="op">(</span><span class="fu"><a href="pkginspectr_example.html">pkginspectr_example</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Inspecting <span style="color: #0000BB;">examplepkg</span>...</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 1 × 11</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># pkginspectr: Package structure, 1 package</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble:    1 × 11</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   package    version num_files num_dirs num_r_files num_function_r_files</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>                <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> examplepkg 1.2.3           9        6           2                    1</span>

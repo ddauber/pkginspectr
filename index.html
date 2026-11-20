@@ -21,7 +21,7 @@
 
     <a class="navbar-brand me-2" href="index.html">pkginspectr</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -61,6 +61,10 @@
 <li>
 <code><a href="reference/pkg_summary.html">pkg_summary()</a></code> – both of the above in one table.</li>
 <li>
+<code><a href="reference/pkg_functions.html">pkg_functions()</a></code> – one row per function, with its size, arguments and whether it is exported.</li>
+<li>
+<code><a href="reference/pkg_history.html">pkg_history()</a></code> – follows a CRAN package across its releases (see <code><a href="reference/pkg_versions.html">pkg_versions()</a></code>).</li>
+<li>
 <code><a href="reference/pkg_plot.html">pkg_plot()</a></code> (or just <code><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot()</a></code>) – draws simple but customisable bar charts of the results in the console.</li>
 </ul>
 <p>Counts are designed to be trustworthy: lines are classified with R’s own parser, and only files that <code>R CMD build</code> would ship are counted (<code>.Rbuildignore</code>, <code>.git/</code> and friends are skipped), so a local folder and a CRAN release of the same package give comparable results.</p>
@@ -81,7 +85,8 @@
 <span></span>
 <span><span class="fu"><a href="reference/pkg_structure.html">pkg_structure</a></span><span class="op">(</span><span class="fu"><a href="reference/pkginspectr_example.html">pkginspectr_example</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Inspecting examplepkg...</span></span>
-<span><span class="co">#&gt; # A tibble: 1 × 11</span></span>
+<span><span class="co">#&gt; # pkginspectr: Package structure, 1 package</span></span>
+<span><span class="co">#&gt; # A tibble:    1 × 11</span></span>
 <span><span class="co">#&gt;   package    version num_files num_dirs num_r_files num_function_r_files</span></span>
 <span><span class="co">#&gt;   &lt;chr&gt;      &lt;chr&gt;       &lt;int&gt;    &lt;int&gt;       &lt;int&gt;                &lt;int&gt;</span></span>
 <span><span class="co">#&gt; 1 examplepkg 1.2.3           9        6           2                    1</span></span>
@@ -96,7 +101,8 @@
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="reference/pkg_lines.html">pkg_lines</a></span><span class="op">(</span><span class="fu"><a href="reference/pkginspectr_example.html">pkginspectr_example</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Counting lines in examplepkg...</span></span>
-<span><span class="co">#&gt; # A tibble: 1 × 11</span></span>
+<span><span class="co">#&gt; # pkginspectr: Lines of code, 1 package</span></span>
+<span><span class="co">#&gt; # A tibble:    1 × 11</span></span>
 <span><span class="co">#&gt;   package version total_lines code_lines comment_lines roxygen_lines blank_lines</span></span>
 <span><span class="co">#&gt;   &lt;chr&gt;   &lt;chr&gt;         &lt;int&gt;      &lt;int&gt;         &lt;int&gt;         &lt;int&gt;       &lt;int&gt;</span></span>
 <span><span class="co">#&gt; 1 exampl… 1.2.3            32         21             2             4           5</span></span>
@@ -147,42 +153,42 @@
 <span><span class="co">#&gt; ── pkginspectr: Package structure ──────────────────────────────────────────────</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; num_files</span></span>
-<span><span class="co">#&gt; pkginspectr  ▏████████▕ 24</span></span>
+<span><span class="co">#&gt; pkginspectr  ▏█████████████████▕ 48</span></span>
 <span><span class="co">#&gt; tidycomp     ▏█████████████████████▕ 61</span></span>
 <span><span class="co">#&gt; r4np         ▏█████████████████████████▕ 71</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; num_dirs</span></span>
-<span><span class="co">#&gt; pkginspectr  ▏██████▕  4</span></span>
+<span><span class="co">#&gt; pkginspectr  ▏██████████████████████▕ 15</span></span>
 <span><span class="co">#&gt; tidycomp     ▏███████▕  5</span></span>
 <span><span class="co">#&gt; r4np         ▏█████████████████████████▕ 17</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; num_r_files</span></span>
-<span><span class="co">#&gt; pkginspectr  ▏████████████████▕  7</span></span>
+<span><span class="co">#&gt; pkginspectr  ▏█████████████████████████▕ 11</span></span>
 <span><span class="co">#&gt; tidycomp     ▏█████████████████████████▕ 11</span></span>
 <span><span class="co">#&gt; r4np         ▏███████████▕  5</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; num_function_r_files</span></span>
-<span><span class="co">#&gt; pkginspectr  ▏████████████████▕  7</span></span>
+<span><span class="co">#&gt; pkginspectr  ▏███████████████████████▕ 10</span></span>
 <span><span class="co">#&gt; tidycomp     ▏█████████████████████████▕ 11</span></span>
 <span><span class="co">#&gt; r4np         ▏█████████▕  4</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; num_non_function_r_files</span></span>
-<span><span class="co">#&gt; pkginspectr  ▏▕  0</span></span>
+<span><span class="co">#&gt; pkginspectr  ▏█████████████████████████▕  1</span></span>
 <span><span class="co">#&gt; tidycomp     ▏▕  0</span></span>
 <span><span class="co">#&gt; r4np         ▏█████████████████████████▕  1</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; num_test_files</span></span>
-<span><span class="co">#&gt; pkginspectr  ▏█████████████▕  8</span></span>
+<span><span class="co">#&gt; pkginspectr  ▏█████████████████▕ 10</span></span>
 <span><span class="co">#&gt; tidycomp     ▏█████████████████████████▕ 15</span></span>
 <span><span class="co">#&gt; r4np         ▏███████▕  4</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; num_vignettes</span></span>
-<span><span class="co">#&gt; pkginspectr  ▏▕  0</span></span>
+<span><span class="co">#&gt; pkginspectr  ▏█████████████████████████▕  1</span></span>
 <span><span class="co">#&gt; tidycomp     ▏▕  0</span></span>
 <span><span class="co">#&gt; r4np         ▏▕  0</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; num_docs</span></span>
-<span><span class="co">#&gt; pkginspectr  ▏███▕  4</span></span>
+<span><span class="co">#&gt; pkginspectr  ▏███████▕  8</span></span>
 <span><span class="co">#&gt; tidycomp     ▏█████████████████████████▕ 29</span></span>
 <span><span class="co">#&gt; r4np         ▏██████████████████████▕ 25</span></span>
 <span><span class="co">#&gt; </span></span>

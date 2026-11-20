@@ -23,7 +23,8 @@ pkginspectr_example()
 
 pkg_structure(pkginspectr_example())
 #> Inspecting examplepkg...
-#> # A tibble: 1 × 11
+#> # pkginspectr: Package structure, 1 package
+#> # A tibble:    1 × 11
 #>   package    version num_files num_dirs num_r_files num_function_r_files
 #>   <chr>      <chr>       <int>    <int>       <int>                <int>
 #> 1 examplepkg 1.2.3           9        6           2                    1

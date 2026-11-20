@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">pkginspectr</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -30,9 +30,18 @@
   <main id="main" class="col-md-9"><div class="page-header">
 
       <h1>Changelog</h1>
-      <small>Source: <a href="https://github.com/ddauber/pkginspectr/blob/v0.2.0/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
+      <small>Source: <a href="https://github.com/ddauber/pkginspectr/blob/main/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="0.3.0" id="pkginspectr-030">pkginspectr 0.3.0<a class="anchor" aria-label="anchor" href="#pkginspectr-030"></a></h2>
+<ul><li><p>New <code><a href="../reference/pkg_functions.html">pkg_functions()</a></code> returns one row per named function: its file, location, start line, code lines, number of arguments and whether it is exported (via <code>export()</code> or <code>exportPattern()</code>). Useful for finding the largest functions or measuring how much of a package is internal.</p></li>
+<li><p>New <code><a href="../reference/pkg_versions.html">pkg_versions()</a></code> lists every CRAN release of a package with its date, and <code><a href="../reference/pkg_history.html">pkg_history()</a></code> runs <code><a href="../reference/pkg_summary.html">pkg_summary()</a></code> on several releases (spread evenly across the history by default, or the versions you name) to show how a package grew over time.</p></li>
+<li><p>When several packages are analysed, one that fails (a typo, a failed download, an unreadable folder) no longer aborts the rest. It is reported in a single warning and kept as a row of <code>NA</code>s, so <code><a href="../reference/pkg_history.html">pkg_history()</a></code> still returns every other release. A single package, or all packages, failing is still an error.</p></li>
+<li><p>Results print a header saying what they contain, e.g. <code># pkginspectr: Lines of code, 3 packages (1 failed)</code>, matching the titles used by <code><a href="../reference/pkg_plot.html">pkg_plot()</a></code>.</p></li>
+<li><p>New “Derived metrics” section in <code><a href="../articles/pkginspectr.html">vignette("pkginspectr")</a></code> with copy-and-paste recipes for ratios such as test-to-code lines, comment density, share of code inside functions and help pages per export.</p></li>
+<li><p><code><a href="../reference/pkg_plot.html">pkg_plot()</a></code> shows non-integer values with at most three decimals, so derived metrics such as ratios stay readable.</p></li>
+</ul></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.2.0" id="pkginspectr-020">pkginspectr 0.2.0<a class="anchor" aria-label="anchor" href="#pkginspectr-020"></a></h2>
 <div class="section level3">

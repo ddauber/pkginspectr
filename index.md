@@ -13,6 +13,12 @@ Key functions include:
   in tests.
 - [`pkg_summary()`](https://ddauber.github.io/pkginspectr/reference/pkg_summary.md)
   – both of the above in one table.
+- [`pkg_functions()`](https://ddauber.github.io/pkginspectr/reference/pkg_functions.md)
+  – one row per function, with its size, arguments and whether it is
+  exported.
+- [`pkg_history()`](https://ddauber.github.io/pkginspectr/reference/pkg_history.md)
+  – follows a CRAN package across its releases (see
+  [`pkg_versions()`](https://ddauber.github.io/pkginspectr/reference/pkg_versions.md)).
 - [`pkg_plot()`](https://ddauber.github.io/pkginspectr/reference/pkg_plot.md)
   (or just [`plot()`](https://rdrr.io/r/graphics/plot.default.html)) –
   draws simple but customisable bar charts of the results in the
@@ -46,7 +52,8 @@ library(pkginspectr)
 
 pkg_structure(pkginspectr_example())
 #> Inspecting examplepkg...
-#> # A tibble: 1 × 11
+#> # pkginspectr: Package structure, 1 package
+#> # A tibble:    1 × 11
 #>   package    version num_files num_dirs num_r_files num_function_r_files
 #>   <chr>      <chr>       <int>    <int>       <int>                <int>
 #> 1 examplepkg 1.2.3           9        6           2                    1
@@ -72,7 +79,8 @@ comment, roxygen, blank) and by location; each breakdown adds up to
 
 pkg_lines(pkginspectr_example())
 #> Counting lines in examplepkg...
-#> # A tibble: 1 × 11
+#> # pkginspectr: Lines of code, 1 package
+#> # A tibble:    1 × 11
 #>   package version total_lines code_lines comment_lines roxygen_lines blank_lines
 #>   <chr>   <chr>         <int>      <int>         <int>         <int>       <int>
 #> 1 exampl… 1.2.3            32         21             2             4           5
@@ -137,42 +145,42 @@ pkg_structure(c(
 #> ── pkginspectr: Package structure ──────────────────────────────────────────────
 #> 
 #> num_files
-#> pkginspectr  ▏████████▕ 24
+#> pkginspectr  ▏█████████████████▕ 48
 #> tidycomp     ▏█████████████████████▕ 61
 #> r4np         ▏█████████████████████████▕ 71
 #> 
 #> num_dirs
-#> pkginspectr  ▏██████▕  4
+#> pkginspectr  ▏██████████████████████▕ 15
 #> tidycomp     ▏███████▕  5
 #> r4np         ▏█████████████████████████▕ 17
 #> 
 #> num_r_files
-#> pkginspectr  ▏████████████████▕  7
+#> pkginspectr  ▏█████████████████████████▕ 11
 #> tidycomp     ▏█████████████████████████▕ 11
 #> r4np         ▏███████████▕  5
 #> 
 #> num_function_r_files
-#> pkginspectr  ▏████████████████▕  7
+#> pkginspectr  ▏███████████████████████▕ 10
 #> tidycomp     ▏█████████████████████████▕ 11
 #> r4np         ▏█████████▕  4
 #> 
 #> num_non_function_r_files
-#> pkginspectr  ▏▕  0
+#> pkginspectr  ▏█████████████████████████▕  1
 #> tidycomp     ▏▕  0
 #> r4np         ▏█████████████████████████▕  1
 #> 
 #> num_test_files
-#> pkginspectr  ▏█████████████▕  8
+#> pkginspectr  ▏█████████████████▕ 10
 #> tidycomp     ▏█████████████████████████▕ 15
 #> r4np         ▏███████▕  4
 #> 
 #> num_vignettes
-#> pkginspectr  ▏▕  0
+#> pkginspectr  ▏█████████████████████████▕  1
 #> tidycomp     ▏▕  0
 #> r4np         ▏▕  0
 #> 
 #> num_docs
-#> pkginspectr  ▏███▕  4
+#> pkginspectr  ▏███████▕  8
 #> tidycomp     ▏█████████████████████████▕ 29
 #> r4np         ▏██████████████████████▕ 25
 #> 

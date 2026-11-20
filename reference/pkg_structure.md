@@ -36,6 +36,14 @@ pkg_structure(
   that does not exist (e.g. `"./mypkg"`) is an error, not a GitHub
   request.
 
+  With several packages, one that cannot be analysed (a typo, a failed
+  download) does not stop the others: it is reported in a warning and
+  returned as a row of `NA`s whose `package` is the specification as
+  given
+  ([`pkg_functions()`](https://ddauber.github.io/pkginspectr/reference/pkg_functions.md)
+  leaves it out instead). A single package that fails, or all packages
+  failing, is an error.
+
 - include_ignored:
 
   If `TRUE`, also analyse files matched by the package's
@@ -110,7 +118,8 @@ to visualise the result.
 ``` r
 pkg_structure(pkginspectr_example())
 #> Inspecting examplepkg...
-#> # A tibble: 1 × 11
+#> # pkginspectr: Package structure, 1 package
+#> # A tibble:    1 × 11
 #>   package    version num_files num_dirs num_r_files num_function_r_files
 #>   <chr>      <chr>       <int>    <int>       <int>                <int>
 #> 1 examplepkg 1.2.3           9        6           2                    1

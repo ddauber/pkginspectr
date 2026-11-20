@@ -19,7 +19,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">pkginspectr</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -53,7 +53,7 @@
       <h1>Get started with pkginspectr</h1>
             
       
-      <small class="dont-index">Source: <a href="https://github.com/ddauber/pkginspectr/blob/v0.2.0/vignettes/pkginspectr.Rmd" class="external-link"><code>vignettes/pkginspectr.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/ddauber/pkginspectr/blob/main/vignettes/pkginspectr.Rmd" class="external-link"><code>vignettes/pkginspectr.Rmd</code></a></small>
       <div class="d-none name"><code>pkginspectr.Rmd</code></div>
     </div>
 
@@ -121,7 +121,8 @@ of the R session. With <code>cache = "persistent"</code>, fixed versions
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/pkg_structure.html">pkg_structure</a></span><span class="op">(</span><span class="va">example</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Inspecting <span style="color: #0000BB;">examplepkg</span>...</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 1 × 11</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># pkginspectr: Package structure, 1 package</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble:    1 × 11</span></span></span>
 <span><span class="co">#&gt;   package    version num_files num_dirs num_r_files num_function_r_files</span></span>
 <span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>                <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> examplepkg 1.2.3           9        6           2                    1</span></span>
@@ -139,7 +140,8 @@ into files that define at least one function and files that do not.
 <code class="sourceCode R"><span><span class="va">lines</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/pkg_lines.html">pkg_lines</a></span><span class="op">(</span><span class="va">example</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Counting lines in <span style="color: #0000BB;">examplepkg</span>...</span></span>
 <span><span class="va">lines</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 1 × 11</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># pkginspectr: Lines of code, 1 package</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble:    1 × 11</span></span></span>
 <span><span class="co">#&gt;   package version total_lines code_lines comment_lines roxygen_lines blank_lines</span></span>
 <span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> exampl… 1.2.3            32         21             2             4           5</span></span>
@@ -180,7 +182,8 @@ to get everything:</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/pkg_summary.html">pkg_summary</a></span><span class="op">(</span><span class="va">example</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Summarising <span style="color: #0000BB;">examplepkg</span>...</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 1 × 20</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># pkginspectr: Package summary, 1 package</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble:    1 × 20</span></span></span>
 <span><span class="co">#&gt;   package    version num_files num_dirs num_r_files num_function_r_files</span></span>
 <span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>                <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> examplepkg 1.2.3           9        6           2                    1</span></span>
@@ -189,6 +192,158 @@ to get everything:</p>
 <span><span class="co">#&gt; <span style="color: #949494;">#   total_lines &lt;int&gt;, code_lines &lt;int&gt;, comment_lines &lt;int&gt;,</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;">#   roxygen_lines &lt;int&gt;, blank_lines &lt;int&gt;, r_lines &lt;int&gt;, test_lines &lt;int&gt;,</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;">#   other_lines &lt;int&gt;, function_lines &lt;int&gt;</span></span></span></code></pre></div>
+</div>
+<div class="section level2">
+<h2 id="individual-functions-pkg_functions">Individual functions: <code>pkg_functions()</code><a class="anchor" aria-label="anchor" href="#individual-functions-pkg_functions"></a>
+</h2>
+<p><code><a href="../reference/pkg_functions.html">pkg_functions()</a></code> goes one level deeper and returns one
+row per named function, with its size, number of arguments and whether
+the package exports it:</p>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">fns</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/pkg_functions.html">pkg_functions</a></span><span class="op">(</span><span class="va">example</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Listing functions in <span style="color: #0000BB;">examplepkg</span>...</span></span>
+<span><span class="va">fns</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># pkginspectr: Functions, 3 functions in 1 package</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble:    3 × 9</span></span></span>
+<span><span class="co">#&gt;   package    version file     location name     line code_lines n_args exported</span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span>   </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> examplepkg 1.2.3   R/funs.R R        add_one     5          3      1 TRUE    </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> examplepkg 1.2.3   R/funs.R R        square     10          1      1 FALSE   </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> examplepkg 1.2.3   R/funs.R R        compose    12          3      2 FALSE</span></span></code></pre></div>
+<p>That makes questions such as “which functions are longest?” or “how
+much of the package is internal?” one-liners:</p>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">fns</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/order.html" class="external-link">order</a></span><span class="op">(</span><span class="va">fns</span><span class="op">$</span><span class="va">code_lines</span>, decreasing <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"name"</span>, <span class="st">"code_lines"</span><span class="op">)</span><span class="op">]</span></span>
+<span><span class="co">#&gt; Warning: Unknown or uninitialised column: `package`.</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># pkginspectr: Functions, 3 functions in 0 packages</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble:    3 × 2</span></span></span>
+<span><span class="co">#&gt;   name    code_lines</span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> add_one          3</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> compose          3</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> square           1</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/table.html" class="external-link">table</a></span><span class="op">(</span>exported <span class="op">=</span> <span class="va">fns</span><span class="op">$</span><span class="va">exported</span><span class="op">)</span></span>
+<span><span class="co">#&gt; exported</span></span>
+<span><span class="co">#&gt; FALSE  TRUE </span></span>
+<span><span class="co">#&gt;     2     1</span></span></code></pre></div>
+</div>
+<div class="section level2">
+<h2 id="following-a-package-over-time">Following a package over time<a class="anchor" aria-label="anchor" href="#following-a-package-over-time"></a>
+</h2>
+<p><code><a href="../reference/pkg_versions.html">pkg_versions()</a></code> lists every CRAN release of a package
+with its date, and <code><a href="../reference/pkg_history.html">pkg_history()</a></code> runs
+<code><a href="../reference/pkg_summary.html">pkg_summary()</a></code> on several of them. By default it picks five
+releases spread across the package’s history, always including the first
+and the latest:</p>
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/pkg_versions.html">pkg_versions</a></span><span class="op">(</span><span class="st">"dplyr"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">history</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/pkg_history.html">pkg_history</a></span><span class="op">(</span><span class="st">"dplyr"</span><span class="op">)</span></span>
+<span><span class="va">history</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">package</span>, <span class="va">version</span>, <span class="va">date</span>, <span class="va">num_r_files</span>, <span class="va">code_lines</span><span class="op">)</span></span></code></pre></div>
+<p>Plot it with <code>type = "metric"</code> to see each metric grow
+release by release. Rows are labelled with their version:</p>
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/pkg_plot.html">pkg_plot</a></span><span class="op">(</span><span class="va">history</span>, type <span class="op">=</span> <span class="st">"metric"</span><span class="op">)</span></span></code></pre></div>
+<p>Use <code>versions</code> to pick releases yourself, and
+<code>cache = "persistent"</code> to keep them for next time, since old
+releases never change:</p>
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/pkg_history.html">pkg_history</a></span><span class="op">(</span><span class="st">"dplyr"</span>, versions <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"0.8.0"</span>, <span class="st">"1.0.0"</span>, <span class="st">"1.1.0"</span><span class="op">)</span>, cache <span class="op">=</span> <span class="st">"persistent"</span><span class="op">)</span></span></code></pre></div>
+</div>
+<div class="section level2">
+<h2 id="derived-metrics">Derived metrics<a class="anchor" aria-label="anchor" href="#derived-metrics"></a>
+</h2>
+<p>pkginspectr returns raw counts on purpose: they are unambiguous and
+add up. Ratios are often more useful, especially when comparing packages
+of very different sizes, and each is a single line of dplyr. Copy the
+ones you need.</p>
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span>, warn.conflicts <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">summary</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/pkg_summary.html">pkg_summary</a></span><span class="op">(</span><span class="va">example</span>, quiet <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
+<div class="section level3">
+<h3 id="package-level-ratios">Package-level ratios<a class="anchor" aria-label="anchor" href="#package-level-ratios"></a>
+</h3>
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">summary</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/transmute.html" class="external-link">transmute</a></span><span class="op">(</span></span>
+<span>    <span class="va">package</span>,</span>
+<span>    <span class="co"># Lines in tests/ for every line in R/</span></span>
+<span>    test_to_code <span class="op">=</span> <span class="va">test_lines</span> <span class="op">/</span> <span class="va">r_lines</span>,</span>
+<span>    <span class="co"># Share of all lines that are comments or roxygen documentation</span></span>
+<span>    comment_density <span class="op">=</span> <span class="op">(</span><span class="va">comment_lines</span> <span class="op">+</span> <span class="va">roxygen_lines</span><span class="op">)</span> <span class="op">/</span> <span class="va">total_lines</span>,</span>
+<span>    <span class="co"># Share of code that sits inside function definitions</span></span>
+<span>    function_share <span class="op">=</span> <span class="va">function_lines</span> <span class="op">/</span> <span class="va">code_lines</span>,</span>
+<span>    <span class="co"># Average size of a script in R/</span></span>
+<span>    lines_per_r_file <span class="op">=</span> <span class="va">r_lines</span> <span class="op">/</span> <span class="va">num_r_files</span></span>
+<span>  <span class="op">)</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># pkginspectr: Package statistics, 1 package</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble:    1 × 5</span></span></span>
+<span><span class="co">#&gt;   package    test_to_code comment_density function_share lines_per_r_file</span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>             <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>           <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>            <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> examplepkg         0.28           0.188          0.333             12.5</span></span></code></pre></div>
+<p><code>r_lines</code> includes the roxygen comments in
+<code>R/</code>, so <code>test_to_code</code> is a conservative measure:
+heavily documented packages score a little lower.</p>
+</div>
+<div class="section level3">
+<h3 id="function-level-summaries">Function-level summaries<a class="anchor" aria-label="anchor" href="#function-level-summaries"></a>
+</h3>
+<p><code><a href="../reference/pkg_functions.html">pkg_functions()</a></code> lends itself to per-package summaries of
+function size and API surface:</p>
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">functions</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/pkg_functions.html">pkg_functions</a></span><span class="op">(</span><span class="va">example</span>, quiet <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">location</span> <span class="op">==</span> <span class="st">"R"</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">package</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html" class="external-link">summarise</a></span><span class="op">(</span></span>
+<span>    n_functions <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/context.html" class="external-link">n</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>    n_exported <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">exported</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>,</span>
+<span>    share_internal <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="op">!</span><span class="va">exported</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>,</span>
+<span>    median_lines <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/median.html" class="external-link">median</a></span><span class="op">(</span><span class="va">code_lines</span><span class="op">)</span>,</span>
+<span>    longest <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">max</a></span><span class="op">(</span><span class="va">code_lines</span><span class="op">)</span>,</span>
+<span>    .groups <span class="op">=</span> <span class="st">"drop"</span></span>
+<span>  <span class="op">)</span></span>
+<span><span class="va">functions</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 1 × 6</span></span></span>
+<span><span class="co">#&gt;   package    n_functions n_exported share_internal median_lines longest</span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>            <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> examplepkg           3          1          0.667            3       3</span></span></code></pre></div>
+</div>
+<div class="section level3">
+<h3 id="combining-tables">Combining tables<a class="anchor" aria-label="anchor" href="#combining-tables"></a>
+</h3>
+<p>Joining the two gives ratios that need both, such as help pages per
+exported function. <code>num_docs</code> counts every <code>.Rd</code>
+file, including package-level and internal topics, so treat it as a
+rough indicator:</p>
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">summary</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">package</span>, <span class="va">num_docs</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html" class="external-link">left_join</a></span><span class="op">(</span><span class="va">functions</span>, by <span class="op">=</span> <span class="st">"package"</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/transmute.html" class="external-link">transmute</a></span><span class="op">(</span><span class="va">package</span>, <span class="va">num_docs</span>, <span class="va">n_exported</span>, docs_per_export <span class="op">=</span> <span class="va">num_docs</span> <span class="op">/</span> <span class="va">n_exported</span><span class="op">)</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># pkginspectr: Package structure, 1 package</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble:    1 × 4</span></span></span>
+<span><span class="co">#&gt;   package    num_docs n_exported docs_per_export</span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>           <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> examplepkg        1          1               1</span></span></code></pre></div>
+</div>
+<div class="section level3">
+<h3 id="plotting-derived-metrics">Plotting derived metrics<a class="anchor" aria-label="anchor" href="#plotting-derived-metrics"></a>
+</h3>
+<p><code><a href="../reference/pkg_plot.html">pkg_plot()</a></code> works on any data frame with a
+<code>package</code> column, so derived metrics can be plotted too. Use
+<code>type = "metric"</code>, which scales each metric on its own,
+because ratios on different scales do not belong on one bar chart:</p>
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/pkg_summary.html">pkg_summary</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"r-lib/cli"</span>, <span class="st">"r-lib/fs"</span>, <span class="st">"desc"</span><span class="op">)</span>, quiet <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/transmute.html" class="external-link">transmute</a></span><span class="op">(</span></span>
+<span>    <span class="va">package</span>,</span>
+<span>    test_to_code <span class="op">=</span> <span class="va">test_lines</span> <span class="op">/</span> <span class="va">r_lines</span>,</span>
+<span>    comment_density <span class="op">=</span> <span class="op">(</span><span class="va">comment_lines</span> <span class="op">+</span> <span class="va">roxygen_lines</span><span class="op">)</span> <span class="op">/</span> <span class="va">total_lines</span></span>
+<span>  <span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="../reference/pkg_plot.html">pkg_plot</a></span><span class="op">(</span>type <span class="op">=</span> <span class="st">"metric"</span>, title <span class="op">=</span> <span class="st">"Testing and documentation"</span><span class="op">)</span></span></code></pre></div>
+</div>
 </div>
 <div class="section level2">
 <h2 id="what-gets-counted">What gets counted<a class="anchor" aria-label="anchor" href="#what-gets-counted"></a>
@@ -203,7 +358,7 @@ listed in the package’s <code>.Rbuildignore</code>, which often includes
 release of the same package give comparable numbers. To count
 <code>.Rbuildignore</code>d files as well, use
 <code>include_ignored = TRUE</code>:</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/pkg_lines.html">pkg_lines</a></span><span class="op">(</span><span class="st">"."</span>, include_ignored <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
@@ -212,7 +367,7 @@ release of the same package give comparable numbers. To count
 <p><code><a href="../reference/pkg_plot.html">pkg_plot()</a></code>, or simply <code><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot()</a></code>, draws bar
 charts in the console. The default view shows one panel per package,
 with each metric as a share of its total:</p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">lines</span><span class="op">)</span></span>
 <span><span class="co">#&gt; <span style="color: #5F87D7;">── pkginspectr: Lines of code ──────────────────────────────────────────────────</span></span></span>
 <span><span class="co">#&gt; </span></span>
@@ -229,11 +384,11 @@ with each metric as a share of its total:</p>
 <span><span class="co">#&gt; <span style="color: #5F87D7;">function_lines   7   21.9%  ▏█████████▕</span></span></span></code></pre></div>
 <p>With several packages, <code>type = "metric"</code> shows one panel
 per metric instead, with bars scaled to the largest value:</p>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/pkg_summary.html">pkg_summary</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"r-lib/cli"</span>, <span class="st">"r-lib/fs"</span>, <span class="st">"desc"</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="../reference/pkg_plot.html">pkg_plot</a></span><span class="op">(</span>type <span class="op">=</span> <span class="st">"metric"</span><span class="op">)</span></span></code></pre></div>
 <p>Bars are plain characters, so you can restyle them:</p>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/pkg_plot.html">pkg_plot</a></span><span class="op">(</span></span>
 <span>  <span class="va">lines</span>,</span>
 <span>  bar_col <span class="op">=</span> <span class="st">"darkorange"</span>,</span>
@@ -263,9 +418,10 @@ per metric instead, with bars scaled to the largest value:</p>
 <p>All functions report progress as they go. Use
 <code>quiet = TRUE</code> to turn the messages off, for example in
 scripts or reports:</p>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/pkg_lines.html">pkg_lines</a></span><span class="op">(</span><span class="va">example</span>, quiet <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 1 × 11</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># pkginspectr: Lines of code, 1 package</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble:    1 × 11</span></span></span>
 <span><span class="co">#&gt;   package version total_lines code_lines comment_lines roxygen_lines blank_lines</span></span>
 <span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> exampl… 1.2.3            32         21             2             4           5</span></span>

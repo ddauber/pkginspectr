@@ -10,6 +10,17 @@ Count files and lines of code in local, GitHub or CRAN packages.
   : Count files and folders in packages
 - [`pkg_lines()`](https://ddauber.github.io/pkginspectr/reference/pkg_lines.md)
   : Count lines of R code in packages
+- [`pkg_functions()`](https://ddauber.github.io/pkginspectr/reference/pkg_functions.md)
+  : List the functions defined in packages
+
+## Package history
+
+Follow a CRAN package across its releases.
+
+- [`pkg_history()`](https://ddauber.github.io/pkginspectr/reference/pkg_history.md)
+  : Follow a package across its CRAN releases
+- [`pkg_versions()`](https://ddauber.github.io/pkginspectr/reference/pkg_versions.md)
+  : List the CRAN releases of a package
 
 ## Visualise
 
