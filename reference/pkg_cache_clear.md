@@ -38,7 +38,7 @@ stored across sessions in a user-specific cache directory).
 ``` r
 # Clear the cache of the current R session
 pkg_cache_clear("session")
-#> ℹ No cache found at /tmp/Rtmpmovvdd/pkginspectr
+#> ℹ No cache found at /tmp/RtmpE8vI9j/pkginspectr
 
 if (FALSE) { # interactive()
 # Clear packages cached across R sessions
