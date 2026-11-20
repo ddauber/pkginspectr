@@ -1,7 +1,7 @@
 test_that("resolve_package_path caches GitHub packages with correct root", {
   skip_on_cran()
   skip_if_offline(host = "github.com")
-  suppressMessages(clear_pkg_cache("session"))
+  suppressMessages(pkg_cache_clear("session"))
   path1 <- suppressMessages(resolve_package_path("ddauber/tidycomp", cache = "session"))
   expect_true(fs::file_exists(fs::path(path1, "DESCRIPTION")))
   path2 <- suppressMessages(resolve_package_path("ddauber/tidycomp", cache = "session"))
@@ -22,7 +22,7 @@ test_that("resolve_package_path returns absolute paths for local directories", {
 test_that("resolve_package_path caches CRAN packages with correct root", {
   skip_on_cran()
   skip_if_offline(host = "cran.r-project.org")
-  suppressMessages(clear_pkg_cache("session"))
+  suppressMessages(pkg_cache_clear("session"))
   path1 <- tryCatch(
     suppressMessages(resolve_package_path("desc", cache = "session")),
     error = function(e) skip("unable to access CRAN")

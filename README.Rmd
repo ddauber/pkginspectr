@@ -24,9 +24,10 @@ knitr::opts_chunk$set(
 
 Key functions include:
 
--   `inspect_package()` – summarises file structure, function files, tests and docs.
--   `get_code_stats()` – counts lines of code, comments, roxygen and tests.
--   `plot_pkg()` – draws simple but customisable bar charts of the results in the console.
+-   `pkg_structure()` – counts files, folders, R scripts, tests, docs and data.
+-   `pkg_lines()` – counts lines of code, comments, roxygen and blank lines, in `R/` and in tests.
+-   `pkg_summary()` – both of the above in one table.
+-   `pkg_plot()` (or just `plot()`) – draws simple but customisable bar charts of the results in the console.
 
 Counts are designed to be trustworthy: lines are classified with R's own parser, and only files that `R CMD build` would ship are counted (`.Rbuildignore`, `.git/` and friends are skipped), so a local folder and a CRAN release of the same package give comparable results.
 
@@ -41,33 +42,33 @@ pak::pak("ddauber/pkginspectr")
 
 ## Inspect a package
 
-Want a quick overview of what’s inside an R package? `inspect_package()` counts files, R scripts, tests, documentation and data. Here we use the small example package that ships with `pkginspectr`:
+Want a quick overview of what’s inside an R package? `pkg_structure()` counts files, R scripts, tests, documentation and data. Here we use the small example package that ships with `pkginspectr`:
 
 ```{r inspect-package}
 library(pkginspectr)
 
-inspect_package(pkginspectr_example())
+pkg_structure(pkginspectr_example())
 ```
 
 `path` can be a local folder, a GitHub repository (`"owner/repo"`) or the name of a CRAN package. Downloads are cached for the rest of the R session.
 
 ## Compute code statistics
 
-Go beyond file counts and see how much code is really there. `get_code_stats()` analyses line counts across `R/`, `tests/` and `data-raw/`.
+Go beyond file counts and see how much code is really there. `pkg_lines()` breaks the lines in `R/`, `tests/` and `data-raw/` down by type (code, comment, roxygen, blank) and by location; each breakdown adds up to `total_lines`.
 
-```{r get-code-stats}
-get_code_stats(pkginspectr_example())
+```{r pkg-lines}
+pkg_lines(pkginspectr_example())
 ```
 
-Files listed in `.Rbuildignore` are skipped by default; use `include_ignored = TRUE` to count them too.
+Files listed in `.Rbuildignore` are skipped by default; use `include_ignored = TRUE` to count them too. Need both tables? `pkg_summary()` returns them together and downloads each package only once.
 
 ## Visualise in the console
 
-No need for heavy graphics — `plot_pkg()` renders Unicode bar charts right in your terminal.
+No need for heavy graphics — `pkg_plot()`, or simply `plot()`, renders Unicode bar charts right in your terminal. Each metric is shown as a share of its total:
 
 ```{r plot-pkg}
-get_code_stats(pkginspectr_example()) |>
-  plot_pkg()
+pkg_lines(pkginspectr_example()) |>
+  plot()
 ```
 
 You can customise the look to meet your needs: bars are just glyphs and ANSI colours, so you can tweak:
@@ -82,14 +83,16 @@ You can customise the look to meet your needs: bars are just glyphs and ANSI col
 Compare packages side by side — perfect for exploring codebases or teaching.
 
 ```{r inspect-multiple, message = FALSE}
-inspect_package(c(
+pkg_structure(c(
   "ddauber/pkginspectr",
   "ddauber/tidycomp",
   "ddauber/r4np"
 )) |>
-  plot_pkg(type = "metric")
+  pkg_plot(type = "metric")
 ```
 
-Here `type = "metric"` switches from a per‑package breakdown to a metric‑centric view (e.g. compare `num_r_files`, `num_test_files` or `num_docs` across packages).
+Here `type = "metric"` switches from a per‑package breakdown to a metric‑centric view: one panel per metric, with bars scaled to the largest package.
+
+See `vignette("pkginspectr")` for a full tour.
 
 This package is meant to be a small and fun package with some useful functionality. Enjoy exploring your own R packages (as much as others’ packages)!

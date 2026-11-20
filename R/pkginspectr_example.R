@@ -11,7 +11,7 @@
 #' @examples
 #' pkginspectr_example()
 #'
-#' inspect_package(pkginspectr_example())
+#' pkg_structure(pkginspectr_example())
 pkginspectr_example <- function() {
   system.file("extdata", "examplepkg", package = "pkginspectr", mustWork = TRUE)
 }

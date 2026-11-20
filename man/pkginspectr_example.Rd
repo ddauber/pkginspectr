@@ -18,5 +18,5 @@ and strings containing \verb{#} and unbalanced braces.
 \examples{
 pkginspectr_example()
 
-inspect_package(pkginspectr_example())
+pkg_structure(pkginspectr_example())
 }

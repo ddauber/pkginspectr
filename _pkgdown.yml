@@ -2,3 +2,18 @@ url: https://ddauber.github.io/pkginspectr/
 template:
   bootstrap: 5
 
+reference:
+- title: Inspect packages
+  desc: >
+    Count files and lines of code in local, GitHub or CRAN packages.
+  contents:
+  - pkg_summary
+  - pkg_structure
+  - pkg_lines
+- title: Visualise
+  contents:
+  - pkg_plot
+- title: Helpers
+  contents:
+  - pkginspectr_example
+  - pkg_cache_clear

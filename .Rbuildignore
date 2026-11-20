@@ -3,7 +3,7 @@
 ^LICENSE\.md$
 ^README\.Rmd$
 
-.*[.]html$
+^(?!inst/doc/).*[.]html$
 
 ^manual_testing$
 ^codecov\.yml$

@@ -79,7 +79,7 @@ get_cache_dir <- function(cache = c("session", "persistent", "none")) {
 }
 
 
-#' Clear downloaded package cache
+#' Clear the cache of downloaded packages
 #'
 #' Deletes the cache directory used by `pkginspectr` to store downloaded
 #' CRAN and GitHub packages. This is useful for freeing up disk space or
@@ -101,12 +101,13 @@ get_cache_dir <- function(cache = c("session", "persistent", "none")) {
 #'
 #' @examples
 #' # Clear the cache of the current R session
-#' clear_pkg_cache("session")
+#' pkg_cache_clear("session")
 #'
 #' @examplesIf interactive()
 #' # Clear packages cached across R sessions
-#' clear_pkg_cache("persistent")
-clear_pkg_cache <- function(type = c("session", "persistent")) {
+#' pkg_cache_clear("persistent")
+pkg_cache_clear <- function(type = c("session", "persistent")) {
+  type <- match.arg(type)
   dir <- get_cache_dir(type)
   if (fs::dir_exists(dir)) {
     fs::dir_delete(dir)

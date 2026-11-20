@@ -9,3 +9,4 @@ manual_testing/
 .DS_Store
 .quarto
 docs
+inst/doc

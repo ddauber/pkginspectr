@@ -23,11 +23,14 @@ Imports:
     dplyr,
     fs,
     httr,
+    lifecycle,
     purrr (>= 1.0.0),
     rappdirs,
-    tidyr,
+    rlang,
     utils
 Suggests:
+    knitr,
+    rmarkdown,
     stringr,
     testthat (>= 3.0.0),
     withr
@@ -35,3 +38,4 @@ Config/testthat/edition: 3
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 Config/roxygen2/version: 8.1.0
+VignetteBuilder: knitr

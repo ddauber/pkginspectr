@@ -1,33 +1,81 @@
 # pkginspectr (development version)
 
--   `get_code_stats()` now classifies lines with R's parser (`utils::getParseData()`)
-    instead of regular expressions and brace counting. Functions assigned with `=`,
-    `\(x)` lambdas and anonymous functions are now counted; one-line functions no
-    longer absorb the following line; `{`, `}` and `#` inside strings are no longer
+## Lifecycle changes
+
+-   All exported functions now share the `pkg_` prefix and are named after what
+    they return. The old names still work but are deprecated:
+
+    -   `inspect_package()` → `pkg_structure()`
+    -   `get_code_stats()` → `pkg_lines()`
+    -   `plot_pkg()` → `pkg_plot()`
+    -   `clear_pkg_cache()` → `pkg_cache_clear()`
+
+## Changes to results
+
+-   `pkg_lines()` returns non-overlapping columns. `code_lines`, `comment_lines`,
+    `roxygen_lines` and `blank_lines` add up to `total_lines`, and so do
+    `r_lines`, `test_lines` and `other_lines`. `function_lines` now counts only
+    code lines inside functions. The deprecated `get_code_stats()` keeps its
+    original columns.
+
+-   `pkg_structure()`: `num_r_files`, `num_function_r_files` and
+    `num_non_function_r_files` now count only scripts in `R/` (previously test and
+    `data-raw/` scripts were included).
+
+-   Lines are now classified with R's parser (`utils::getParseData()`) instead of
+    regular expressions and brace counting. Functions assigned with `=`, `\(x)`
+    lambdas and anonymous functions are counted; one-line functions no longer
+    absorb the following line; `{`, `}` and `#` inside strings are no longer
     miscounted. Files that fail to parse produce a warning.
 
--   `inspect_package()` and `get_code_stats()` classify files by their path relative
-    to the package root. Previously a package stored under a folder named `tests/`,
-    `man/` or `data/` had all of its files misclassified.
-
--   `inspect_package()` and `get_code_stats()` now count only files that `R CMD build`
-    would ship: `.Rbuildignore`, version-control folders and R's built-in exclusions
-    are respected, so local folders and CRAN tarballs are comparable. Use the new
-    `include_ignored = TRUE` argument to count `.Rbuildignore`d files again.
+-   Only files that `R CMD build` would ship are counted: `.Rbuildignore`,
+    version-control folders and R's built-in exclusions are respected, so local
+    folders and CRAN tarballs are comparable. Use the new `include_ignored = TRUE`
+    argument to count `.Rbuildignore`d files again.
 
 -   Lower-case `.r` files, `.Rnw` vignettes and `.rds`/`.csv`/`.tsv`/`.tab`/`.txt`
     data files are now recognised.
 
+## New features
+
+-   `pkg_summary()` returns `pkg_structure()` and `pkg_lines()` in one table,
+    resolving and downloading each package only once.
+
+-   `plot()` works on any pkginspectr result.
+
+-   `pkg_plot()` documents all its styling arguments (`text_col`, `bar_col`,
+    `bg_col`, `glyph`, `start`, `end`, `max_bars`, `title`), and both views accept
+    the same set. Metric bars are scaled to each metric's largest value, so
+    packages are easy to compare. The package view groups metrics into
+    "Files" (shares of `num_files`) and "Lines" (shares of `total_lines`), and
+    shows `num_dirs` without a misleading percentage. Default titles describe
+    the data.
+
+-   `pkg_structure()`, `pkg_lines()` and `pkg_summary()` gain `quiet = TRUE` to
+    suppress progress messages.
+
 -   New `pkginspectr_example()` returns the path to a small example package
     bundled with pkginspectr, so examples run offline.
 
--   `clear_pkg_cache()` now returns the cleared path (or `NULL`) invisibly, as
-    documented.
+-   New "Get started" vignette: `vignette("pkginspectr")`.
+
+## Bug fixes
+
+-   Files are classified by their path relative to the package root. Previously
+    a package stored under a folder named `tests/`, `man/` or `data/` had all of
+    its files misclassified.
+
+-   `pkg_cache_clear()` returns the cleared path (or `NULL`) invisibly, as
+    documented, and its message no longer lists both cache types when called
+    without arguments.
 
 -   GitHub and CRAN lookups no longer fail when the suggested glue package is not
     installed; glue is no longer used.
 
--   pkginspectr now requires R >= 4.1.0 and purrr >= 1.0.0.
+## Other
+
+-   pkginspectr now requires R >= 4.1.0 and purrr >= 1.0.0, and no longer
+    depends on tidyr.
 
 -   Examples no longer use `\dontrun{}` and no longer clear the persistent cache.
     Added GitHub Actions workflows for `R CMD check` and test coverage.
