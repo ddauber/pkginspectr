@@ -1,4 +1,4 @@
-# pkginspectr (development version)
+# pkginspectr 0.3.0
 
 -   New `pkg_functions()` returns one row per named function: its file,
     location, start line, code lines, number of arguments and whether it is
