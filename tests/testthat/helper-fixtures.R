@@ -58,6 +58,12 @@ local_fake_network <- function(
     files <- names(archive)
     dates <- unname(archive)
   }
+  # Pin the mirror so expected URLs do not depend on the session's options
+  # (CI runners set e.g. "https://cloud.R-project.org").
+  withr::local_options(
+    repos = c(CRAN = "https://cloud.r-project.org"),
+    .local_envir = env
+  )
   log <- new.env()
   log$urls <- character()
   db <- matrix(
