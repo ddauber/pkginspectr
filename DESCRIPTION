@@ -1,30 +1,37 @@
 Package: pkginspectr
 Title: Tidy Tools for Inspecting and Comparing R Package Structure
-Version: 0.1.1
+Version: 0.1.2
 Authors@R:
     person("Daniel", "Dauber", , "daniel.dauber.io@gmail.com", role = c("aut", "cre"))
-Author: Daniel Dauber [aut, cre]
-Maintainer: Daniel Dauber <daniel.dauber.io@gmail.com>
-Description: Inspect the structure and source code of R packages with a tidy, minimal interface. Provides tools to summarise file counts, folder structure, and lines of code across R packages, whether local or hosted on GitHub. Designed for speed, extensibility, and compatibility with tidy workflows. Visualise results using built-in ggplot2 support, and compare multiple packages side by side to spot patterns or explore code scale.
+Description: Inspect the structure and source code of R packages from local
+    folders, 'GitHub' repositories or 'CRAN'. Summarise file counts, folder
+    structure and lines of code (blank, comment, 'roxygen', function and test
+    lines) as tidy tibbles. Lines are classified with R's own parser, and
+    files excluded by '.Rbuildignore' are skipped, so local folders and
+    released packages can be compared on equal terms. Compare several
+    packages side by side and visualise the results as Unicode bar charts in
+    the console.
 License: MIT + file LICENSE
-Encoding: UTF-8
-Roxygen: list(markdown = TRUE)
+URL: https://ddauber.github.io/pkginspectr/,
+    https://github.com/ddauber/pkginspectr
+BugReports: https://github.com/ddauber/pkginspectr/issues
+Depends:
+    R (>= 4.1.0)
 Imports:
     cli,
     desc,
     dplyr,
     fs,
-    purrr,
     httr,
+    purrr (>= 1.0.0),
     rappdirs,
     tidyr,
     utils
 Suggests:
-    glue,
     stringr,
     testthat (>= 3.0.0),
-    usethis,
     withr
 Config/testthat/edition: 3
-URL: https://ddauber.github.io/pkginspectr/
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
 Config/roxygen2/version: 8.1.0

@@ -26,13 +26,15 @@
 #' @export
 #'
 #' @examples
-#' \dontrun{
-#' inspect_package("r-lib/cli")
-#' }
+#' inspect_package(pkginspectr_example())
+#'
+#' @examplesIf interactive()
+#' # GitHub repositories and CRAN packages are downloaded and cached
+#' inspect_package(c("r-lib/cli", "desc"))
 inspect_package <- function(path = ".", include_ignored = FALSE) {
   paths <- resolve_package_path(path)
 
-  result <- purrr::map_dfr(paths, function(pkg_path) {
+  result <- purrr::map(paths, function(pkg_path) {
     if (!fs::dir_exists(pkg_path)) {
       cli::cli_abort("The path {.path {pkg_path}} does not exist.")
     }
@@ -78,7 +80,8 @@ inspect_package <- function(path = ".", include_ignored = FALSE) {
       num_docs = length(doc_files),
       num_data_files = length(data_files)
     )
-  })
+  }) |>
+    purrr::list_rbind()
 
   class(result) <- c("pkginspectr_tbl", class(result))
   result

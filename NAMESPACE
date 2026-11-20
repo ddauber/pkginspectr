@@ -3,4 +3,5 @@
 export(clear_pkg_cache)
 export(get_code_stats)
 export(inspect_package)
+export(pkginspectr_example)
 export(plot_pkg)

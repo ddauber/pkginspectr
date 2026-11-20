@@ -39,13 +39,15 @@
 #' @export
 #'
 #' @examples
-#' \dontrun{
-#' get_code_stats("r-lib/cli")
-#' }
+#' get_code_stats(pkginspectr_example())
+#'
+#' @examplesIf interactive()
+#' # GitHub repositories and CRAN packages are downloaded and cached
+#' get_code_stats(c("r-lib/cli", "desc"))
 get_code_stats <- function(path = ".", include_ignored = FALSE) {
   paths <- resolve_package_path(path)
 
-  result <- purrr::map_dfr(paths, function(pkg_path) {
+  result <- purrr::map(paths, function(pkg_path) {
     if (!fs::dir_exists(pkg_path)) {
       cli::cli_abort("The path {.path {pkg_path}} does not exist.")
     }
@@ -90,7 +92,8 @@ get_code_stats <- function(path = ".", include_ignored = FALSE) {
         dplyr::across(dplyr::everything(), ~ sum(.x, na.rm = TRUE))
       ) |>
       dplyr::mutate(package = pkg_name, version = pkg_version, .before = 1)
-  })
+  }) |>
+    purrr::list_rbind()
 
   class(result) <- c("pkginspectr_tbl", class(result))
   result

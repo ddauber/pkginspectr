@@ -1,9 +1,10 @@
 test_that("resolve_package_path caches GitHub packages with correct root", {
+  skip_on_cran()
   skip_if_offline(host = "github.com")
-  clear_pkg_cache("session")
-  path1 <- resolve_package_path("ddauber/tidycomp", cache = "session")
+  suppressMessages(clear_pkg_cache("session"))
+  path1 <- suppressMessages(resolve_package_path("ddauber/tidycomp", cache = "session"))
   expect_true(fs::file_exists(fs::path(path1, "DESCRIPTION")))
-  path2 <- resolve_package_path("ddauber/tidycomp", cache = "session")
+  path2 <- suppressMessages(resolve_package_path("ddauber/tidycomp", cache = "session"))
   expect_true(fs::file_exists(fs::path(path2, "DESCRIPTION")))
   expect_identical(path1, path2)
 })
@@ -19,19 +20,21 @@ test_that("resolve_package_path returns absolute paths for local directories", {
 })
 
 test_that("resolve_package_path caches CRAN packages with correct root", {
+  skip_on_cran()
   skip_if_offline(host = "cran.r-project.org")
-  clear_pkg_cache("session")
+  suppressMessages(clear_pkg_cache("session"))
   path1 <- tryCatch(
-    resolve_package_path("desc", cache = "session"),
+    suppressMessages(resolve_package_path("desc", cache = "session")),
     error = function(e) skip("unable to access CRAN")
   )
   expect_true(fs::file_exists(fs::path(path1, "DESCRIPTION")))
-  path2 <- resolve_package_path("desc", cache = "session")
+  path2 <- suppressMessages(resolve_package_path("desc", cache = "session"))
   expect_true(fs::file_exists(fs::path(path2, "DESCRIPTION")))
   expect_identical(path1, path2)
 })
 
 test_that("resolve_package_path errors on unknown specification", {
+  skip_on_cran()
   skip_if_offline(host = "cran.r-project.org")
-  expect_error(resolve_package_path("pkginspectrNonexistentPkg"))
+  expect_error(suppressMessages(resolve_package_path("pkginspectrNonexistentPkg")))
 })

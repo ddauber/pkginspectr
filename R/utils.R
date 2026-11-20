@@ -53,7 +53,7 @@ is_github_url <- function(x) {
 #' @noRd
 # nocov start
 is_cran_package <- function(pkg) {
-  url <- glue::glue("https://cran.r-project.org/web/packages/{pkg}/index.html")
+  url <- paste0("https://cran.r-project.org/web/packages/", pkg, "/index.html")
   res <- try(httr::http_error(url), silent = TRUE)
   if (inherits(res, "try-error")) {
     return(FALSE)
@@ -100,19 +100,21 @@ get_cache_dir <- function(cache = c("session", "persistent", "none")) {
 #' @export
 #'
 #' @examples
-#' # Clear session cache
+#' # Clear the cache of the current R session
 #' clear_pkg_cache("session")
 #'
-#' # Clear persistent cache
+#' @examplesIf interactive()
+#' # Clear packages cached across R sessions
 #' clear_pkg_cache("persistent")
 clear_pkg_cache <- function(type = c("session", "persistent")) {
   dir <- get_cache_dir(type)
   if (fs::dir_exists(dir)) {
     fs::dir_delete(dir)
     cli::cli_alert_success("Cleared {.val {type}} cache at {.path {dir}}")
-  } else {
-    cli::cli_alert_info("No cache found at {.path {dir}}")
+    return(invisible(dir))
   }
+  cli::cli_alert_info("No cache found at {.path {dir}}")
+  invisible(NULL)
 }
 
 
@@ -131,7 +133,7 @@ get_default_branch <- function(repo) {
     repo <- sub("^https://github.com/", "", repo)
   }
 
-  api_url <- glue::glue("https://api.github.com/repos/{repo}")
+  api_url <- paste0("https://api.github.com/repos/", repo)
 
   resp <- httr::GET(api_url)
   if (httr::http_error(resp)) {

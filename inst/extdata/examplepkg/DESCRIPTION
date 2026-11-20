@@ -1,0 +1,6 @@
+Package: examplepkg
+Title: Example Package Bundled with pkginspectr
+Version: 1.2.3
+Description: A tiny package with known contents, used in pkginspectr examples
+    and tests.
+License: MIT

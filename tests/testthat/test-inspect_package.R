@@ -2,7 +2,7 @@ test_that("inspect_package returns exact counts for the fixture package", {
   result <- suppressMessages(inspect_package(fixture_path()))
 
   expect_s3_class(result, "pkginspectr_tbl")
-  expect_equal(result$package, "fixturepkg")
+  expect_equal(result$package, "examplepkg")
   expect_equal(result$version, "1.2.3")
   expect_equal(result$num_files, 9)
   expect_equal(result$num_dirs, 6)
@@ -68,4 +68,23 @@ test_that("inspect_package triggers error on unreadable folder", {
   withr::defer(Sys.chmod(pkg_path, mode = "700"))
 
   expect_error(inspect_package(pkg_path), "Failed to list files in")
+})
+
+test_that("results do not depend on where the package lives on disk", {
+  # Parent folders named like package folders used to misclassify every file.
+  pkg <- local_fixture_copy(parent = fs::path("tests", "man", "data"))
+  expect_true(grepl("/tests/man/data/", pkg, fixed = TRUE))
+
+  expect_equal(
+    suppressMessages(inspect_package(pkg))[-1],
+    suppressMessages(inspect_package(fixture_path()))[-1]
+  )
+  expect_equal(
+    suppressMessages(get_code_stats(pkg))[-1],
+    suppressMessages(get_code_stats(fixture_path()))[-1]
+  )
+})
+
+test_that("pkginspectr_example() points at the bundled package", {
+  expect_true(fs::file_exists(fs::path(pkginspectr_example(), "DESCRIPTION")))
 })

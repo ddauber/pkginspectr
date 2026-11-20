@@ -51,7 +51,10 @@ anything listed in \code{.Rbuildignore} (often \verb{data-raw/}) is skipped unle
 \code{include_ignored = TRUE}.
 }
 \examples{
-\dontrun{
-get_code_stats("r-lib/cli")
-}
+get_code_stats(pkginspectr_example())
+
+\dontshow{if (interactive()) withAutoprint(\{ # examplesIf}
+# GitHub repositories and CRAN packages are downloaded and cached
+get_code_stats(c("r-lib/cli", "desc"))
+\dontshow{\}) # examplesIf}
 }

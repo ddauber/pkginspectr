@@ -1,6 +1,10 @@
 test_that("plot_pkg returns input invisibly", {
   x <- dplyr::tibble(package = "pkg1", total_lines = 1)
   class(x) <- c("pkginspectr_tbl", class(x))
-  expect_identical(plot_pkg(x, type = "metric"), x)
-  expect_identical(plot_pkg(x, type = "package"), x)
+  capture_output(res_metric <- withVisible(plot_pkg(x, type = "metric")))
+  capture_output(res_package <- withVisible(plot_pkg(x, type = "package")))
+  expect_identical(res_metric$value, x)
+  expect_false(res_metric$visible)
+  expect_identical(res_package$value, x)
+  expect_false(res_package$visible)
 })

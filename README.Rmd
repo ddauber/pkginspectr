@@ -2,12 +2,22 @@
 output: github_document
 ---
 
+<!-- README.md is generated from README.Rmd. Please edit that file -->
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
 # pkginspectr
 
 <!-- badges: start -->
 
 [![Lifecycle: experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
 [![Codecov test coverage](https://codecov.io/gh/ddauber/pkginspectr/graph/badge.svg)](https://app.codecov.io/gh/ddauber/pkginspectr)
+[![R-CMD-check](https://github.com/ddauber/pkginspectr/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/ddauber/pkginspectr/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
 `pkginspectr` lets you peek inside R packages. It inspects local folders as well as packages downloaded from GitHub or CRAN and returns tidy tibbles that are easy to work with.
@@ -15,58 +25,63 @@ output: github_document
 Key functions include:
 
 -   `inspect_package()` – summarises file structure, function files, tests and docs.
--   `get_code_stats()` – counts lines of code, comments and tests.
--   `plot_pkginspect()` – draws simple but customisable bar charts of the results in the console.
+-   `get_code_stats()` – counts lines of code, comments, roxygen and tests.
+-   `plot_pkg()` – draws simple but customisable bar charts of the results in the console.
+
+Counts are designed to be trustworthy: lines are classified with R's own parser, and only files that `R CMD build` would ship are counted (`.Rbuildignore`, `.git/` and friends are skipped), so a local folder and a CRAN release of the same package give comparable results.
 
 ## Installation
 
 You can install the development version from GitHub:
 
 ``` r
-# install.packages("remotes")
-remotes::install_github("ddauber/pkginspectr")
+# install.packages("pak")
+pak::pak("ddauber/pkginspectr")
 ```
 
 ## Inspect a package
 
-Want a quick overview of what’s inside an R package?
-`pkginspectr` lets you count files, functions, and other components in seconds.
+Want a quick overview of what’s inside an R package? `inspect_package()` counts files, R scripts, tests, documentation and data. Here we use the small example package that ships with `pkginspectr`:
 
 ```{r inspect-package}
 library(pkginspectr)
 
-inspect_package("ddauber/pkginspectr")
+inspect_package(pkginspectr_example())
 ```
+
+`path` can be a local folder, a GitHub repository (`"owner/repo"`) or the name of a CRAN package. Downloads are cached for the rest of the R session.
 
 ## Compute code statistics
 
-Go beyond file counts and see how much code is really there.
-`get_code_stats()` analyses line counts across the package.
+Go beyond file counts and see how much code is really there. `get_code_stats()` analyses line counts across `R/`, `tests/` and `data-raw/`.
 
 ```{r get-code-stats}
-get_code_stats("ddauber/pkginspectr")
+get_code_stats(pkginspectr_example())
 ```
+
+Files listed in `.Rbuildignore` are skipped by default; use `include_ignored = TRUE` to count them too.
 
 ## Visualise in the console
 
 No need for heavy graphics — `plot_pkg()` renders Unicode bar charts right in your terminal.
 
-```{r plot-pkginspect}
-inspect_package("ddauber/pkginspectr") |>
+```{r plot-pkg}
+get_code_stats(pkginspectr_example()) |>
   plot_pkg()
 ```
 
 You can customise the look to meet your needs: bars are just glyphs and ANSI colours, so you can tweak:
-- colours (e.g. `text_col`, `bar_col`, etc.),
-- bar shape (`glyph`, `start`, `end`),
-- scale/fit (`max_bars`), or
-- add a custom title (`title`)
 
-## Inspect multiple packages at once
+-   colours (`text_col`, `bar_col`, `bg_col`),
+-   bar shape (`glyph`, `start`, `end`),
+-   scale/fit (`max_bars`), or
+-   add a custom title (`title`).
+
+## Compare multiple packages
 
 Compare packages side by side — perfect for exploring codebases or teaching.
 
-```{r inspect-multiple}
+```{r inspect-multiple, message = FALSE}
 inspect_package(c(
   "ddauber/pkginspectr",
   "ddauber/tidycomp",
@@ -75,7 +90,6 @@ inspect_package(c(
   plot_pkg(type = "metric")
 ```
 
-Here `type = "metric"` switches from a per‑package breakdown to a metric‑centric view
-(e.g., compare `num_r_files`, `num_test_files`, `docs`, etc. across packages).
+Here `type = "metric"` switches from a per‑package breakdown to a metric‑centric view (e.g. compare `num_r_files`, `num_test_files` or `num_docs` across packages).
 
 This package is meant to be a small and fun package with some useful functionality. Enjoy exploring your own R packages (as much as others’ packages)!

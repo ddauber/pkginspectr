@@ -13,18 +13,19 @@
 #' @export
 #'
 #' @examples
-#' \dontrun{
-#' # Plot the statistics in pkg_data
-#' plot_pkg(pkg_data, type = "metric")
-#' }
+#' stats <- get_code_stats(pkginspectr_example())
+#'
+#' # One chart per package
+#' plot_pkg(stats)
+#'
+#' # One chart per metric, comparing packages
+#' plot_pkg(stats, type = "metric")
 plot_pkg <- function(x, type = c("package", "metric"), ...) {
   type <- match.arg(type)
 
   if (identical(type, "package")) {
-    # per-package breakdown (your former `plot_pkginspect_single`)
     return(invisible(plot_pkginspect_by_package(x, ...)))
   }
 
-  # metric-first comparison (your `plot_pkginspect_by_metric`)
   invisible(plot_pkginspect_by_metric(x, ...))
 }

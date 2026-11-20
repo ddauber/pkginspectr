@@ -1,3 +1,19 @@
+# pkginspectr 0.1.2
+
+-   New `pkginspectr_example()` returns the path to a small example package
+    bundled with pkginspectr, so examples run offline.
+
+-   `clear_pkg_cache()` now returns the cleared path (or `NULL`) invisibly, as
+    documented.
+
+-   GitHub and CRAN lookups no longer fail when the suggested glue package is not
+    installed; glue is no longer used.
+
+-   pkginspectr now requires R >= 4.1.0 and purrr >= 1.0.0.
+
+-   Examples no longer use `\dontrun{}` and no longer clear the persistent cache.
+    Added GitHub Actions workflows for `R CMD check` and test coverage.
+
 # pkginspectr 0.1.1
 
 -   `get_code_stats()` now classifies lines with R's parser (`utils::getParseData()`)
@@ -19,8 +35,6 @@
     data files are now recognised.
 
 # pkginspectr 0.1.0
-
--   `pkginspectr` returns statistical insights into R packages:
 
 -   Added `inspect_package()` which returns key statistics about an R package. In particular:
 

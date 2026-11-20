@@ -3,7 +3,7 @@ test_that("get_code_stats returns exact counts for the fixture package", {
 
   expect_s3_class(result, "pkginspectr_tbl")
   expect_equal(nrow(result), 1)
-  expect_equal(result$package, "fixturepkg")
+  expect_equal(result$package, "examplepkg")
   expect_equal(result$version, "1.2.3")
   expect_equal(result$total_lines, 32)
   expect_equal(result$blank_lines, 5)

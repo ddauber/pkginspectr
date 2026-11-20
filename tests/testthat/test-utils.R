@@ -22,12 +22,14 @@ test_that("clear_pkg_cache removes session cache", {
   fs::dir_create(dir)
   file.create(fs::path(dir, "dummy"))
   expect_true(fs::file_exists(fs::path(dir, "dummy")))
-  clear_pkg_cache("session")
+  expect_message(cleared <- clear_pkg_cache("session"), "Cleared")
+  expect_equal(cleared, dir)
   expect_false(fs::dir_exists(dir))
 })
 
 test_that("clear_pkg_cache is silent when no cache exists", {
   dir <- pkginspectr:::get_cache_dir("session")
   if (fs::dir_exists(dir)) fs::dir_delete(dir)
-  expect_no_error(clear_pkg_cache("session"))
+  expect_message(cleared <- clear_pkg_cache("session"), "No cache found")
+  expect_null(cleared)
 })

@@ -42,7 +42,10 @@ folders (e.g. \verb{.git/}), R's built-in build exclusions (e.g. \verb{.Rproj.us
 folder comparable with results for a CRAN tarball.
 }
 \examples{
-\dontrun{
-inspect_package("r-lib/cli")
-}
+inspect_package(pkginspectr_example())
+
+\dontshow{if (interactive()) withAutoprint(\{ # examplesIf}
+# GitHub repositories and CRAN packages are downloaded and cached
+inspect_package(c("r-lib/cli", "desc"))
+\dontshow{\}) # examplesIf}
 }

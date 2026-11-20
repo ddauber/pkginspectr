@@ -29,9 +29,11 @@ created during the current R session) or the persistent cache (files
 stored across sessions in a user-specific cache directory).
 }
 \examples{
-# Clear session cache
+# Clear the cache of the current R session
 clear_pkg_cache("session")
 
-# Clear persistent cache
+\dontshow{if (interactive()) withAutoprint(\{ # examplesIf}
+# Clear packages cached across R sessions
 clear_pkg_cache("persistent")
+\dontshow{\}) # examplesIf}
 }

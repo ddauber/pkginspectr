@@ -23,8 +23,11 @@ Plots data retrieved from \code{\link[=get_code_stats]{get_code_stats()}}, \code
 and returns the results in the console.
 }
 \examples{
-\dontrun{
-# Plot the statistics in pkg_data
-plot_pkg(pkg_data, type = "metric")
-}
+stats <- get_code_stats(pkginspectr_example())
+
+# One chart per package
+plot_pkg(stats)
+
+# One chart per metric, comparing packages
+plot_pkg(stats, type = "metric")
 }
