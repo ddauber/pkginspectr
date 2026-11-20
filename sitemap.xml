@@ -2,13 +2,19 @@
 <url><loc>https://ddauber.github.io/pkginspectr/404.html</loc></url>
 <url><loc>https://ddauber.github.io/pkginspectr/LICENSE-text.html</loc></url>
 <url><loc>https://ddauber.github.io/pkginspectr/LICENSE.html</loc></url>
+<url><loc>https://ddauber.github.io/pkginspectr/articles/index.html</loc></url>
+<url><loc>https://ddauber.github.io/pkginspectr/articles/pkginspectr.html</loc></url>
 <url><loc>https://ddauber.github.io/pkginspectr/authors.html</loc></url>
 <url><loc>https://ddauber.github.io/pkginspectr/index.html</loc></url>
 <url><loc>https://ddauber.github.io/pkginspectr/news/index.html</loc></url>
-<url><loc>https://ddauber.github.io/pkginspectr/reference/clear_pkg_cache.html</loc></url>
-<url><loc>https://ddauber.github.io/pkginspectr/reference/get_code_stats.html</loc></url>
 <url><loc>https://ddauber.github.io/pkginspectr/reference/index.html</loc></url>
-<url><loc>https://ddauber.github.io/pkginspectr/reference/inspect_package.html</loc></url>
-<url><loc>https://ddauber.github.io/pkginspectr/reference/plot_pkg.html</loc></url>
+<url><loc>https://ddauber.github.io/pkginspectr/reference/pkg_cache_clear.html</loc></url>
+<url><loc>https://ddauber.github.io/pkginspectr/reference/pkg_lines.html</loc></url>
+<url><loc>https://ddauber.github.io/pkginspectr/reference/pkg_plot.html</loc></url>
+<url><loc>https://ddauber.github.io/pkginspectr/reference/pkg_structure.html</loc></url>
+<url><loc>https://ddauber.github.io/pkginspectr/reference/pkg_summary.html</loc></url>
+<url><loc>https://ddauber.github.io/pkginspectr/reference/pkginspectr-deprecated.html</loc></url>
+<url><loc>https://ddauber.github.io/pkginspectr/reference/pkginspectr-package.html</loc></url>
+<url><loc>https://ddauber.github.io/pkginspectr/reference/pkginspectr_example.html</loc></url>
 </urlset>
 
