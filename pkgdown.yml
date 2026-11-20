@@ -3,7 +3,7 @@ pkgdown: 2.2.1
 pkgdown_sha: ~
 articles:
   pkginspectr: pkginspectr.html
-last_built: 2026-11-20T17:53Z
+last_built: 2026-11-20T18:16Z
 urls:
   reference: https://ddauber.github.io/pkginspectr/reference
   article: https://ddauber.github.io/pkginspectr/articles
