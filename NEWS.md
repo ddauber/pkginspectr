@@ -1,3 +1,8 @@
+# pkginspectr (development version)
+
+-   curl is now listed in Suggests: the network tests use it to check for an
+    internet connection, and failed on CI without it.
+
 # pkginspectr 0.3.0
 
 -   New `pkg_functions()` returns one row per named function: its file,
