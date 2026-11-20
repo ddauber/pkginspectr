@@ -33,12 +33,18 @@
 #' @examplesIf interactive()
 #' # GitHub repositories and CRAN packages are downloaded and cached
 #' pkg_structure(c("r-lib/cli", "desc"))
-pkg_structure <- function(path = ".", include_ignored = FALSE, quiet = FALSE) {
+pkg_structure <- function(
+  path = ".",
+  include_ignored = FALSE,
+  quiet = FALSE,
+  cache = c("session", "persistent", "none")
+) {
   map_packages(
     path,
     function(pkg_path, info) structure_one(pkg_path, info, include_ignored),
     verb = "Inspecting",
-    quiet = quiet
+    quiet = quiet,
+    cache = cache
   )
 }
 

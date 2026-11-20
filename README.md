@@ -59,9 +59,11 @@ pkg_structure(pkginspectr_example())
 #> #   num_vignettes <int>, num_docs <int>, num_data_files <int>
 ```
 
-`path` can be a local folder, a GitHub repository (`"owner/repo"`) or
-the name of a CRAN package. Downloads are cached for the rest of the R
-session.
+`path` can be a local folder, a GitHub repository (`"owner/repo"`,
+optionally `"owner/repo@v1.0.0"`) or a CRAN package (`"desc"`, or an
+older release such as `"cran::desc@1.4.0"`). Downloads are cached for
+the rest of the R session, or across sessions with
+`cache = "persistent"`.
 
 ## Compute code statistics
 

@@ -50,7 +50,7 @@ test_that("pkg_lines errors on unresolvable path", {
   fake <- tempfile("does_not_exist_")
   expect_error(
     pkg_lines(fake),
-    regexp = "Could not resolve path .* must be a local folder",
+    regexp = "Could not resolve path .* no such local folder",
     class = "purrr_error_indexed"
   )
 })

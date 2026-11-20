@@ -38,8 +38,20 @@ Every function below takes a `path`. It can be:
 * a GitHub repository, such as `"r-lib/cli"`, or
 * the name of a CRAN package, such as `"desc"`.
 
+Remote packages can be pinned to a version, and prefixes make the source
+explicit:
+
+| `path`                          | Meaning                                   |
+|---------------------------------|-------------------------------------------|
+| `"r-lib/cli@v3.6.0"`            | GitHub tag, branch or commit              |
+| `"github::apache/arrow/r"`      | A package in a subfolder of a repository  |
+| `"cran::desc@1.4.0"`            | An older CRAN release                     |
+| `"local::pkgs/mypkg"`           | A local folder, never looked up online    |
+
 GitHub and CRAN packages are downloaded once and cached for the rest of the R
-session. `pkg_cache_clear()` removes the cache.
+session. With `cache = "persistent"`, fixed versions (CRAN releases, GitHub
+tags and commits) are kept across sessions too. `pkg_cache_clear()` empties
+the cache.
 
 ## Files and folders: `pkg_structure()`
 

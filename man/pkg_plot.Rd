@@ -34,7 +34,8 @@ panel per metric comparing packages.}
 default) leaves the terminal background unchanged.}
 
 \item{glyph}{Character used to fill the bars. Must be a single-width
-character; wide characters such as emoji are replaced by \code{"━"}.}
+character; wide characters such as emoji are replaced by a heavy
+horizontal line.}
 
 \item{start, end}{Characters drawn at the start and end of each bar. Use
 \code{""} for no caps.}

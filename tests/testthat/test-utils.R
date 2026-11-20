@@ -1,35 +1,23 @@
-# Tests for internal utility helpers
-
-test_that("is_github_spec identifies GitHub shorthand", {
-  expect_true(pkginspectr:::is_github_spec("user/repo"))
-  expect_false(pkginspectr:::is_github_spec("https://github.com/user/repo"))
+test_that("get_cache_dir respects cache modes and test overrides", {
+  root <- local_test_cache()
+  expect_equal(get_cache_dir("session"), fs::path(root, "session"))
+  expect_equal(get_cache_dir("persistent"), fs::path(root, "persistent"))
+  expect_null(get_cache_dir("none"))
 })
 
-test_that("is_github_url detects full GitHub URLs", {
-  expect_true(pkginspectr:::is_github_url("https://github.com/user/repo"))
-  expect_false(pkginspectr:::is_github_url("user/repo"))
-})
-
-test_that("get_cache_dir respects cache modes", {
-  session_path <- pkginspectr:::get_cache_dir("session")
-  expect_true(grepl("pkginspectr", session_path))
-  none_path <- pkginspectr:::get_cache_dir("none")
-  expect_null(none_path)
-})
-
-test_that("clear_pkg_cache removes session cache", {
-  dir <- pkginspectr:::get_cache_dir("session")
+test_that("pkg_cache_clear removes the cache and returns its path", {
+  local_test_cache()
+  dir <- get_cache_dir("session")
   fs::dir_create(dir)
-  file.create(fs::path(dir, "dummy"))
-  expect_true(fs::file_exists(fs::path(dir, "dummy")))
+  fs::file_create(fs::path(dir, "dummy"))
+
   expect_message(cleared <- pkg_cache_clear("session"), "Cleared")
   expect_equal(cleared, dir)
   expect_false(fs::dir_exists(dir))
 })
 
-test_that("clear_pkg_cache is silent when no cache exists", {
-  dir <- pkginspectr:::get_cache_dir("session")
-  if (fs::dir_exists(dir)) fs::dir_delete(dir)
-  expect_message(cleared <- pkg_cache_clear("session"), "No cache found")
+test_that("pkg_cache_clear reports when there is no cache", {
+  local_test_cache()
+  expect_message(cleared <- pkg_cache_clear(), "No cache found")
   expect_null(cleared)
 })

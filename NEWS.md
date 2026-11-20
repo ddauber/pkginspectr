@@ -1,4 +1,4 @@
-# pkginspectr (development version)
+# pkginspectr 0.2.0
 
 ## Lifecycle changes
 
@@ -38,6 +38,20 @@
 
 ## New features
 
+-   Clearer package sources in `path`:
+
+    -   Explicit prefixes `local::`, `github::` and `cran::`. Unprefixed input
+        still works, but a path that does not exist (e.g. `"./mypkg"`) is now an
+        error instead of a GitHub request.
+    -   GitHub refs (`"r-lib/cli@v3.6.0"`), subfolders
+        (`"github::owner/repo/subdir"`) and browser URLs
+        (`github.com/owner/repo/tree/<ref>/<subdir>`).
+    -   Older CRAN releases (`"cran::desc@1.4.0"`) and archived CRAN packages.
+
+-   New `cache` argument (`"session"`, `"persistent"` or `"none"`). The
+    persistent cache keeps fixed versions (CRAN releases, GitHub commit SHAs and
+    version tags) across R sessions; GitHub branches are always fetched fresh.
+
 -   `pkg_summary()` returns `pkg_structure()` and `pkg_lines()` in one table,
     resolving and downloading each package only once.
 
@@ -61,6 +75,16 @@
 
 ## Bug fixes
 
+-   GitHub downloads no longer use the GitHub API, so they are no longer limited
+    to 60 requests per hour.
+
+-   CRAN downloads work when no CRAN mirror is set (e.g. under `Rscript`), and no
+    longer miss packages that need a newer R version.
+
+-   Cached downloads are keyed by owner, repository and ref, so same-named repos
+    from different owners no longer collide, and a failed download no longer
+    leaves a broken cache entry behind.
+
 -   Files are classified by their path relative to the package root. Previously
     a package stored under a folder named `tests/`, `man/` or `data/` had all of
     its files misclassified.
@@ -75,7 +99,7 @@
 ## Other
 
 -   pkginspectr now requires R >= 4.1.0 and purrr >= 1.0.0, and no longer
-    depends on tidyr.
+    depends on tidyr or httr.
 
 -   Examples no longer use `\dontrun{}` and no longer clear the persistent cache.
     Added GitHub Actions workflows for `R CMD check` and test coverage.

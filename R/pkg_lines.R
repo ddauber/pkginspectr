@@ -17,12 +17,33 @@
 #' anything listed in `.Rbuildignore` (often `data-raw/`) is skipped unless
 #' `include_ignored = TRUE`.
 #'
-#' @param path A character vector of local package paths, GitHub repositories
-#'   (`"owner/repo"`) or CRAN package names.
+#' @param path A character vector of packages. Each element is one of:
+#'   * A local folder, such as `"."` or `"~/code/mypkg"`. Use
+#'     `"local::path"` to be explicit.
+#'   * A GitHub repository, such as `"r-lib/cli"` or a `github.com` URL.
+#'     Add `@ref` for a branch, tag or commit (`"r-lib/cli@v3.6.0"`). For a
+#'     package in a subfolder, use the `github::` prefix:
+#'     `"github::owner/repo/subdir"`.
+#'   * A CRAN package, such as `"desc"`. Add `@version` for an older release
+#'     (`"cran::desc@1.4.0"`). Archived packages are supported.
+#'
+#'   Without a prefix, existing local folders take precedence, then
+#'   `"owner/repo"` is treated as GitHub and a bare name as CRAN. A path that
+#'   does not exist (e.g. `"./mypkg"`) is an error, not a GitHub request.
 #' @param include_ignored If `TRUE`, also analyse files matched by the
 #'   package's `.Rbuildignore`. Version-control folders and R's built-in
 #'   build exclusions are always skipped.
 #' @param quiet If `TRUE`, suppress progress messages.
+#' @param cache Where to keep downloaded GitHub and CRAN packages:
+#'   * `"session"` (default): a temporary folder, removed when R closes.
+#'   * `"persistent"`: a user cache folder kept across R sessions. Only fixed
+#'     versions are stored there: CRAN releases and GitHub refs that look like
+#'     a commit SHA or a version tag (`"owner/repo@v1.2.0"`). Requests that can
+#'     change over time (no ref, or a branch) always fetch the latest code and
+#'     use the session cache instead.
+#'   * `"none"`: always download afresh.
+#'
+#'   Use [pkg_cache_clear()] to empty a cache.
 #'
 #' @return A `pkginspectr_tbl` with one row per package and columns:
 #'   * `package`, `version`
@@ -53,12 +74,21 @@
 #' @examplesIf interactive()
 #' # GitHub repositories and CRAN packages are downloaded and cached
 #' pkg_lines(c("r-lib/cli", "desc"))
-pkg_lines <- function(path = ".", include_ignored = FALSE, quiet = FALSE) {
+#'
+#' # Specific versions, kept across sessions
+#' pkg_lines(c("r-lib/cli@v3.6.0", "cran::desc@1.4.0"), cache = "persistent")
+pkg_lines <- function(
+  path = ".",
+  include_ignored = FALSE,
+  quiet = FALSE,
+  cache = c("session", "persistent", "none")
+) {
   map_packages(
     path,
     function(pkg_path, info) lines_one(pkg_path, info, include_ignored),
     verb = "Counting lines in",
-    quiet = quiet
+    quiet = quiet,
+    cache = cache
   )
 }
 

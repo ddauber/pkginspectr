@@ -10,12 +10,20 @@
 #'   `info` is the list returned by `get_pkg_name_version()`.
 #' @param verb Progress message verb, e.g. `"Inspecting"`.
 #' @param quiet If `TRUE`, suppress progress messages.
+#' @param cache Cache mode passed to `resolve_package_path()`.
 #' @return A `pkginspectr_tbl`.
 #' @keywords internal
 #' @noRd
-map_packages <- function(path, fun, verb, quiet = FALSE) {
+map_packages <- function(
+  path,
+  fun,
+  verb,
+  quiet = FALSE,
+  cache = c("session", "persistent", "none")
+) {
+  cache <- match.arg(cache)
   with_quiet(quiet, {
-    paths <- resolve_package_path(path)
+    paths <- resolve_package_path(path, cache = cache)
 
     result <- purrr::map(paths, function(pkg_path) {
       if (!fs::dir_exists(pkg_path)) {

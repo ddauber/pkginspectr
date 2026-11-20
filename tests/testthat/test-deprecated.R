@@ -18,6 +18,7 @@ test_that("old function names still work but are deprecated", {
     "roxygen_lines", "function_lines", "test_lines"
   ))
 
+  local_test_cache()
   expect_warning(
     suppressMessages(clear_pkg_cache("session")),
     class = "lifecycle_warning_deprecated"

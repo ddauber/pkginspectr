@@ -1,79 +1,25 @@
-#' Check if a string is a GitHub repo shorthand
+#' Cache directory for a cache type
 #'
-#' Determines whether the input string follows the GitHub shorthand format
-#' `"user/repo"` (e.g., `"tidyverse/ggplot2"`), and is not a local directory.
+#' The locations can be redirected with the internal options
+#' `pkginspectr.session_cache` and `pkginspectr.persistent_cache`, which the
+#' tests use so they never touch a user's real cache.
 #'
-#' @param x A character string.
-#'
-#' @return `TRUE` if the input looks like a GitHub shorthand and does not correspond
-#'   to a local folder, `FALSE` otherwise.
-#'
-#' @examples
-#' is_github_spec("tidyverse/ggplot2")
-#' is_github_spec("https://github.com/tidyverse/ggplot2")  # FALSE
-#' is_github_spec("local/folder/path")                     # FALSE
-#'
-#' @keywords internal
-#' @noRd
-is_github_spec <- function(x) {
-  grepl("^[^/]+/[^/]+$", x) && !fs::dir_exists(x)
-}
-
-
-#' Check if a string is a full GitHub URL
-#'
-#' Determines whether the input is a valid full GitHub repository URL,
-#' such as `"https://github.com/user/repo"`.
-#'
-#' @param x A character string.
-#'
-#' @return `TRUE` if the string matches the GitHub URL pattern, `FALSE` otherwise.
-#'
-#' @examples
-#' is_github_url("https://github.com/tidyverse/ggplot2")
-#' is_github_url("tidyverse/ggplot2")  # FALSE
-#'
-#' @keywords internal
-#' @noRd
-is_github_url <- function(x) {
-  grepl("^https://github.com/.+/.+", x)
-}
-
-
-#' Check if a package exists on CRAN
-#'
-#' This utility function checks whether a given package name refers to a valid
-#' CRAN package by attempting to access its package index page.
-#'
-#' @param pkg A character string containing the name of a CRAN package (e.g., `"ggplot2"`).
-#'
-#' @return A logical value: `TRUE` if the package exists on CRAN, `FALSE` otherwise.
-#'
-#' @keywords internal
-#' @noRd
-# nocov start
-is_cran_package <- function(pkg) {
-  url <- paste0("https://cran.r-project.org/web/packages/", pkg, "/index.html")
-  res <- try(httr::http_error(url), silent = TRUE)
-  if (inherits(res, "try-error")) {
-    return(FALSE)
-  }
-  !res
-}
-# nocov end
-
-#' Resolve the appropriate cache directory
-#'
-#' @param cache Cache mode: "session", "persistent", or "none".
-#' @return A string path or NULL if caching is disabled.
+#' @param cache `"session"`, `"persistent"` or `"none"`.
+#' @return A path, or `NULL` for `"none"`.
 #' @keywords internal
 #' @noRd
 get_cache_dir <- function(cache = c("session", "persistent", "none")) {
   cache <- match.arg(cache)
   switch(
     cache,
-    session = fs::path(tempdir(), "pkginspectr"),
-    persistent = rappdirs::user_cache_dir("pkginspectr"),
+    session = getOption(
+      "pkginspectr.session_cache",
+      fs::path(tempdir(), "pkginspectr")
+    ),
+    persistent = getOption(
+      "pkginspectr.persistent_cache",
+      rappdirs::user_cache_dir("pkginspectr")
+    ),
     none = NULL
   )
 }
@@ -118,39 +64,6 @@ pkg_cache_clear <- function(type = c("session", "persistent")) {
   invisible(NULL)
 }
 
-
-#' Get default branch of a GitHub repository
-#'
-#' Queries the GitHub API to retrieve the default branch of a repository.
-#'
-#' @param repo A GitHub shorthand like "user/repo" or full URL like "https://github.com/user/repo".
-#' @return A character string with the name of the default branch.
-#' @noRd
-#' @keywords internal
-# nocov start
-get_default_branch <- function(repo) {
-  # Convert full URL to "user/repo"
-  if (grepl("^https://github.com/", repo)) {
-    repo <- sub("^https://github.com/", "", repo)
-  }
-
-  api_url <- paste0("https://api.github.com/repos/", repo)
-
-  resp <- httr::GET(api_url)
-  if (httr::http_error(resp)) {
-    cli::cli_abort("Failed to query GitHub API for {.val {repo}}.")
-  }
-
-  content <- httr::content(resp)
-  if (!"default_branch" %in% names(content)) {
-    cli::cli_abort("Could not detect default branch for {.val {repo}}.")
-  }
-
-  cli::cli_inform("Detected default branch: {.val {content$default_branch}}")
-
-  content$default_branch
-}
-# nocov end
 
 #' Retrieve package name and version from DESCRIPTION
 #'

@@ -17,7 +17,12 @@
 #' @examplesIf interactive()
 #' pkg_summary(c("r-lib/cli", "desc")) |>
 #'   pkg_plot(type = "metric")
-pkg_summary <- function(path = ".", include_ignored = FALSE, quiet = FALSE) {
+pkg_summary <- function(
+  path = ".",
+  include_ignored = FALSE,
+  quiet = FALSE,
+  cache = c("session", "persistent", "none")
+) {
   map_packages(
     path,
     function(pkg_path, info) {
@@ -26,6 +31,7 @@ pkg_summary <- function(path = ".", include_ignored = FALSE, quiet = FALSE) {
       dplyr::bind_cols(structure, lines[setdiff(names(lines), names(structure))])
     },
     verb = "Summarising",
-    quiet = quiet
+    quiet = quiet,
+    cache = cache
   )
 }

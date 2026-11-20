@@ -4,17 +4,48 @@
 \alias{pkg_structure}
 \title{Count files and folders in packages}
 \usage{
-pkg_structure(path = ".", include_ignored = FALSE, quiet = FALSE)
+pkg_structure(
+  path = ".",
+  include_ignored = FALSE,
+  quiet = FALSE,
+  cache = c("session", "persistent", "none")
+)
 }
 \arguments{
-\item{path}{A character vector of local package paths, GitHub repositories
-(\code{"owner/repo"}) or CRAN package names.}
+\item{path}{A character vector of packages. Each element is one of:
+\itemize{
+\item A local folder, such as \code{"."} or \code{"~/code/mypkg"}. Use
+\code{"local::path"} to be explicit.
+\item A GitHub repository, such as \code{"r-lib/cli"} or a \code{github.com} URL.
+Add \verb{@ref} for a branch, tag or commit (\code{"r-lib/cli@v3.6.0"}). For a
+package in a subfolder, use the \verb{github::} prefix:
+\code{"github::owner/repo/subdir"}.
+\item A CRAN package, such as \code{"desc"}. Add \verb{@version} for an older release
+(\code{"cran::desc@1.4.0"}). Archived packages are supported.
+}
+
+Without a prefix, existing local folders take precedence, then
+\code{"owner/repo"} is treated as GitHub and a bare name as CRAN. A path that
+does not exist (e.g. \code{"./mypkg"}) is an error, not a GitHub request.}
 
 \item{include_ignored}{If \code{TRUE}, also analyse files matched by the
 package's \code{.Rbuildignore}. Version-control folders and R's built-in
 build exclusions are always skipped.}
 
 \item{quiet}{If \code{TRUE}, suppress progress messages.}
+
+\item{cache}{Where to keep downloaded GitHub and CRAN packages:
+\itemize{
+\item \code{"session"} (default): a temporary folder, removed when R closes.
+\item \code{"persistent"}: a user cache folder kept across R sessions. Only fixed
+versions are stored there: CRAN releases and GitHub refs that look like
+a commit SHA or a version tag (\code{"owner/repo@v1.2.0"}). Requests that can
+change over time (no ref, or a branch) always fetch the latest code and
+use the session cache instead.
+\item \code{"none"}: always download afresh.
+}
+
+Use \code{\link[=pkg_cache_clear]{pkg_cache_clear()}} to empty a cache.}
 }
 \value{
 A \code{pkginspectr_tbl} with one row per package and columns:
